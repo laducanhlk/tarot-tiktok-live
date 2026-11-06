@@ -1,0 +1,2387 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=1080, initial-scale=1.0" />
+  <title>Tarot TikTok Live Studio Overlay (9:16)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg-obsidian: #07030f;
+      --gold-main: #d4af37;
+      --gold-bright: #fbe69b;
+      --gold-glow: rgba(212, 175, 55, 0.65);
+      --text-ivory: #f9f3e3;
+      --text-muted: #d8c8f0;
+      --emerald-cleanse: #4ef5c5;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #05020a;
+      font-family: "Be Vietnam Pro", sans-serif;
+      color: var(--text-ivory);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Chế độ nền dành cho TikTok Live Studio */
+    body.bg-mode-chroma,
+    body.bg-mode-chroma .obs-stage {
+      background: #00ff00 !important;
+    }
+    body.bg-mode-chroma .witch-bg-layer,
+    body.bg-mode-chroma .witch-vignette {
+      display: none !important;
+    }
+
+    body.bg-mode-transparent,
+    body.bg-mode-transparent .obs-stage {
+      background: transparent !important;
+    }
+    body.bg-mode-transparent .witch-bg-layer,
+    body.bg-mode-transparent .witch-vignette {
+      display: none !important;
+    }
+
+    /* Khung chuẩn 9:16 (1080x1920) cho TikTok Live Studio & OBS */
+    .obs-stage {
+      position: relative;
+      width: 1080px;
+      height: 1920px;
+      background: #090314;
+      overflow: hidden;
+      border: 3px solid rgba(212, 175, 55, 0.55);
+      box-shadow: 0 0 60px rgba(0, 0, 0, 0.9);
+      transform-origin: center center;
+    }
+
+    /* ==================== LỚP NỀN CÔ PHÙ THỦY GÓC RỘNG TỪ TRÊN XUỐNG ==================== */
+    .witch-bg-layer {
+      position: absolute;
+      inset: 0;
+      background-image: url("/witch_bg.png?v=2");
+      background-size: cover;
+      background-position: center top;
+      background-repeat: no-repeat;
+      z-index: 1;
+      animation: witchBreathing 10s ease-in-out infinite;
+      filter: saturate(1.12) contrast(1.04);
+      transition: filter 0.6s ease, transform 0.6s ease;
+    }
+
+    .witch-bg-layer.casting-spell {
+      filter: saturate(1.35) brightness(1.16) drop-shadow(0 0 35px rgba(251, 230, 155, 0.7));
+    }
+
+    @keyframes witchBreathing {
+      0%, 100% { transform: scale(1.0) translateY(0px); }
+      50% { transform: scale(1.02) translateY(-6px); }
+    }
+
+    /* Lớp phủ giữ nửa trên (khuôn mặt & tay cô phù thủy) trong trẻo hoàn toàn, chỉ làm tối nhẹ mặt bàn phía dưới */
+    .witch-vignette {
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(
+          180deg,
+          rgba(8, 3, 18, 0.25) 0%,
+          rgba(12, 4, 28, 0.0) 12%,
+          rgba(12, 4, 28, 0.0) 46%,
+          rgba(10, 3, 24, 0.55) 68%,
+          rgba(6, 2, 15, 0.88) 100%
+        );
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    /* Hiệu ứng vòng phép thuật từ đôi bàn tay cô phù thủy trên mặt bàn */
+    .witch-magic-aura {
+      position: absolute;
+      top: 38%;
+      left: 50%;
+      width: 480px;
+      height: 320px;
+      transform: translate(-50%, -50%) scale(0.5);
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(251, 230, 155, 0.75) 0%, rgba(168, 85, 247, 0.4) 48%, transparent 72%);
+      opacity: 0;
+      pointer-events: none;
+      z-index: 5;
+      mix-blend-mode: screen;
+    }
+
+    .witch-magic-aura.cast {
+      animation: witchCastPulse 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    @keyframes witchCastPulse {
+      0% { transform: translate(-50%, -50%) scale(0.3); opacity: 0.95; }
+      50% { transform: translate(-50%, -20%) scale(1.35); opacity: 0.85; }
+      100% { transform: translate(-50%, 20%) scale(1.85); opacity: 0; }
+    }
+
+    /* Khung viền vàng kim 4 góc */
+    .corner-ornament {
+      position: absolute;
+      width: 58px;
+      height: 58px;
+      border-color: var(--gold-main);
+      border-style: solid;
+      z-index: 10;
+      opacity: 0.85;
+      filter: drop-shadow(0 0 8px var(--gold-glow));
+      pointer-events: none;
+    }
+    .corner-tl { top: 16px; left: 16px; border-width: 3px 0 0 3px; border-top-left-radius: 14px; }
+    .corner-tr { top: 16px; right: 16px; border-width: 3px 3px 0 0; border-top-right-radius: 14px; }
+    .corner-bl { bottom: 16px; left: 16px; border-width: 0 0 3px 3px; border-bottom-left-radius: 14px; }
+    .corner-br { bottom: 16px; right: 16px; border-width: 0 3px 3px 0; border-bottom-right-radius: 14px; }
+
+    /* ==================== THANH HUD MỎNG SÁT ĐỈNH MÀN HÌNH + THANH NĂNG LƯỢNG TẬP THỂ ==================== */
+    .top-bar {
+      position: relative;
+      z-index: 15;
+      padding: 14px 36px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+
+    .top-bar-row-1 {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      width: 100%;
+    }
+
+    /* Thanh tiến trình "Năng Lượng Tập Thể" (Global Energy Bar: 5.000 Tim hoặc 50 Share) */
+    .global-energy-container {
+      width: 100%;
+      background: linear-gradient(90deg, rgba(16, 5, 38, 0.88), rgba(38, 9, 68, 0.9), rgba(16, 5, 38, 0.88));
+      border: 1.5px solid rgba(250, 204, 21, 0.78);
+      border-radius: 14px;
+      padding: 6px 16px 8px;
+      box-shadow: 0 0 22px rgba(168, 85, 247, 0.45), inset 0 0 12px rgba(250, 204, 21, 0.18);
+      transition: transform 0.2s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+    }
+
+    .global-energy-container.energy-pulse {
+      transform: scale(1.016);
+      border-color: #fde047;
+      box-shadow: 0 0 36px rgba(253, 224, 71, 0.95), 0 0 60px rgba(236, 72, 153, 0.75);
+    }
+
+    .global-energy-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 4px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .global-energy-title {
+      color: #fef08a;
+      letter-spacing: 0.5px;
+      text-shadow: 0 0 10px rgba(250, 204, 21, 0.8);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .global-energy-stats {
+      color: #f5d0fe;
+      font-size: 12.5px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .global-energy-pct-badge {
+      background: linear-gradient(135deg, #ec4899, #eab308);
+      color: #fff;
+      padding: 1px 9px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 800;
+      box-shadow: 0 0 10px rgba(236, 72, 153, 0.7);
+    }
+
+    .global-energy-track {
+      width: 100%;
+      height: 12px;
+      background: rgba(255, 255, 255, 0.12);
+      border-radius: 999px;
+      overflow: hidden;
+      position: relative;
+      border: 1px solid rgba(253, 224, 71, 0.45);
+    }
+
+    .global-energy-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #ec4899, #a855f7, #38bdf8, #fde047);
+      background-size: 200% 100%;
+      animation: energyShimmer 2.5s linear infinite;
+      border-radius: 999px;
+      box-shadow: 0 0 18px #fde047, 0 0 28px #ec4899;
+      transition: width 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    @keyframes energyShimmer {
+      0% { background-position: 0% 50%; }
+      100% { background-position: 200% 50%; }
+    }
+
+    #meteorFireworksCanvas {
+      position: absolute;
+      inset: 0;
+      width: 1080px;
+      height: 1920px;
+      pointer-events: none;
+      z-index: 49;
+    }
+
+    .mystic-header-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 7px 20px;
+      border-radius: 999px;
+      background: rgba(14, 5, 30, 0.72);
+      backdrop-filter: blur(8px);
+      border: 1.5px solid var(--gold-main);
+      box-shadow: 0 0 18px var(--gold-glow);
+    }
+
+    .topic-label {
+      font-family: "Cormorant Garamond", serif;
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--gold-bright);
+    }
+
+    .cleanse-meter-wrap {
+      flex: 1;
+      max-width: 440px;
+      background: rgba(10, 3, 22, 0.72);
+      backdrop-filter: blur(6px);
+      border: 1px solid rgba(212, 175, 55, 0.45);
+      border-radius: 999px;
+      padding: 6px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .cleanse-meter-label {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--gold-bright);
+      white-space: nowrap;
+    }
+
+    .cleanse-bar-bg {
+      flex: 1;
+      height: 9px;
+      background: rgba(255, 255, 255, 0.14);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .cleanse-bar-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #a855f7, #f59e0b, #fde047);
+      border-radius: 999px;
+      box-shadow: 0 0 12px rgba(251, 230, 155, 0.95);
+      transition: width 0.45s ease;
+    }
+
+    /* ==================== KHOẢNG TRỐNG 490PX HOÀN TOÀN TRONG SUỐT ĐỂ HIỂN THỊ TRỌN VẸN CÔ PHÙ THỦY ==================== */
+    .witch-clear-viewport {
+      position: relative;
+      z-index: 12;
+      height: 490px;
+      width: 100%;
+      pointer-events: none;
+    }
+
+    /* Bộ bài úp đặt gọn ở góc trái mặt bàn (không che mặt hay tay cô phù thủy ở giữa) */
+    .deck-side-holder {
+      position: absolute;
+      bottom: 18px;
+      left: 48px;
+      pointer-events: auto;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .velvet-deck-stack {
+      position: relative;
+      width: 82px;
+      height: 126px;
+      perspective: 900px;
+      cursor: pointer;
+      transform: rotateX(18deg) rotateZ(-6deg);
+    }
+
+    .deck-layer {
+      position: absolute;
+      inset: 0;
+      border-radius: 9px;
+      background: linear-gradient(145deg, #270d4d, #0f0420);
+      border: 2px solid var(--gold-main);
+      box-shadow: 0 10px 22px rgba(0, 0, 0, 0.88), 0 0 18px rgba(212, 175, 55, 0.45);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .deck-layer:nth-child(1) { transform: translate(-5px, 4px) rotate(-5deg); opacity: 0.75; }
+    .deck-layer:nth-child(2) { transform: translate(5px, 3px) rotate(4deg); opacity: 0.88; }
+    .deck-layer:nth-child(3) {
+      animation: deckFloat 3.2s ease-in-out infinite;
+    }
+
+    .deck-back-pattern {
+      width: 84%;
+      height: 86%;
+      border: 1px solid rgba(251, 230, 155, 0.65);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      color: var(--gold-bright);
+    }
+
+    @keyframes deckFloat {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-6px); box-shadow: 0 14px 28px rgba(0, 0, 0, 0.9), 0 0 32px var(--gold-bright); }
+    }
+
+    /* Các tag hướng dẫn nhỏ gọn nằm bên phải mặt bàn */
+    .table-rules-right {
+      position: absolute;
+      bottom: 20px;
+      right: 44px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 7px;
+    }
+
+    .rule-pill {
+      background: rgba(12, 4, 26, 0.76);
+      backdrop-filter: blur(6px);
+      border: 1px solid rgba(212, 175, 55, 0.48);
+      border-radius: 10px;
+      padding: 5px 13px;
+      font-size: 14.5px;
+      color: var(--text-ivory);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+    }
+
+    .rule-pill strong {
+      color: var(--gold-bright);
+    }
+
+    .cleanse-Shockwave {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      border: 3px solid var(--emerald-cleanse);
+      box-shadow: 0 0 60px var(--emerald-cleanse), inset 0 0 40px var(--gold-bright);
+      transform: translate(-50%, -50%) scale(0.2);
+      opacity: 0;
+      pointer-events: none;
+      z-index: 40;
+    }
+
+    .cleanse-Shockwave.active {
+      animation: cleanseRipple 2.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    @keyframes cleanseRipple {
+      0% { transform: translate(-50%, -50%) scale(0.3); opacity: 1; }
+      70% { opacity: 0.75; }
+      100% { transform: translate(-50%, -50%) scale(8.5); opacity: 0; }
+    }
+
+    /* ==================== MẶT BÀN TRẢI BÀI 3D PHÍA DƯỚI (GÓC NHÌN TRÊN XUỐNG) ==================== */
+    .reading-arena {
+      position: relative;
+      z-index: 15;
+      padding: 0 44px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .querent-banner {
+      width: 100%;
+      max-width: 960px;
+      background: rgba(16, 5, 34, 0.82);
+      backdrop-filter: blur(10px);
+      border: 1.5px solid var(--gold-main);
+      border-radius: 16px;
+      padding: 11px 22px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.75);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+
+    .querent-handle-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 2px;
+    }
+
+    .querent-username {
+      font-size: 21px;
+      font-weight: 700;
+      color: var(--gold-bright);
+    }
+
+    .spread-badge {
+      padding: 3px 12px;
+      border-radius: 999px;
+      font-size: 12.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      background: linear-gradient(135deg, #b48222, #f5d372);
+      color: #160729;
+    }
+
+    .querent-question {
+      font-size: 18px;
+      color: var(--text-ivory);
+      font-style: italic;
+    }
+
+    /* Sân khấu trải bài trên mặt bàn nhung với độ nghiêng phối cảnh nhẹ */
+    .cards-stage-3d {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 24px;
+      perspective: 1400px;
+      min-height: 395px;
+      margin-bottom: 14px;
+    }
+
+    .tarot-card-slot {
+      width: 260px;
+      height: 395px;
+      perspective: 1400px;
+      position: relative;
+      opacity: 0;
+      /* Bay từ góc bộ bài bên trái mặt bàn ra giữa bàn */
+      transform: translate(-340px, -130px) scale(0.28) rotateZ(-15deg);
+      transition:
+        transform 0.8s cubic-bezier(0.2, 0.9, 0.25, 1.05),
+        opacity 0.4s ease;
+    }
+
+    .cards-stage-3d.single-mode .tarot-card-slot {
+      width: 275px;
+      height: 410px;
+    }
+
+    .tarot-card-slot.fly-in {
+      opacity: 1;
+      transform: translate(0, 0) scale(1) rotateX(6deg);
+    }
+
+    .tarot-card-inner {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.9s cubic-bezier(0.34, 1.45, 0.64, 1);
+    }
+
+    .tarot-card-slot.flipped .tarot-card-inner {
+      transform: rotateY(180deg);
+    }
+
+    .card-face {
+      position: absolute;
+      inset: 0;
+      border-radius: 16px;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      overflow: hidden;
+      border: 2.5px solid var(--gold-main);
+      box-shadow: 0 20px 38px rgba(0, 0, 0, 0.92), 0 0 24px rgba(212, 175, 55, 0.45);
+    }
+
+    .card-back {
+      background:
+        radial-gradient(circle at 50% 50%, rgba(212, 175, 55, 0.3), transparent 62%),
+        linear-gradient(155deg, #2c0f59 0%, #120526 55%, #240c4a 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px;
+    }
+
+    .card-back-frame {
+      width: 100%;
+      height: 100%;
+      border: 1.5px solid rgba(251, 230, 155, 0.65);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .card-back-Mandala {
+      font-size: 62px;
+      color: var(--gold-bright);
+      text-shadow: 0 0 24px var(--gold-main);
+    }
+
+    .card-front {
+      transform: rotateY(180deg);
+      background: linear-gradient(180deg, rgba(27, 10, 54, 0.97) 0%, rgba(11, 3, 24, 0.99) 100%);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 11px;
+    }
+
+    .card-position-ribbon {
+      text-align: center;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+      color: var(--gold-bright);
+      background: rgba(212, 175, 55, 0.16);
+      border: 1px solid rgba(212, 175, 55, 0.42);
+      padding: 4px 8px;
+      border-radius: 7px;
+    }
+
+    .card-artwork-box {
+      position: relative;
+      flex: 1;
+      margin: 6px 0;
+      border-radius: 10px;
+      border: 2px solid #eab308;
+      background: radial-gradient(circle at 50% 35%, rgba(251, 230, 155, 0.25), rgba(18, 5, 38, 0.98) 75%);
+      box-shadow: inset 0 0 14px rgba(0, 0, 0, 0.75), 0 0 12px rgba(212, 175, 55, 0.35);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      padding: 3px;
+    }
+
+    .card-artwork-svg-wrap {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 7px;
+      overflow: hidden;
+    }
+
+    .rws-card-photo {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 6px;
+      display: block;
+      filter: contrast(1.06) saturate(1.08);
+    }
+
+    .card-artwork-svg-wrap.reversed {
+      transform: rotate(180deg);
+    }
+
+    .orientation-pill {
+      position: absolute;
+      bottom: 6px;
+      right: 6px;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 999px;
+      text-transform: uppercase;
+    }
+
+    .orientation-pill.upright {
+      background: rgba(16, 185, 129, 0.25);
+      color: #6ee7b7;
+      border: 1px solid rgba(110, 231, 183, 0.5);
+    }
+
+    .orientation-pill.reversed {
+      background: rgba(244, 63, 94, 0.28);
+      color: #fda4af;
+      border: 1px solid rgba(253, 164, 175, 0.55);
+    }
+
+    .card-title-block {
+      text-align: center;
+    }
+
+    .card-name-title {
+      font-family: "Cormorant Garamond", serif;
+      font-size: 20.5px;
+      font-weight: 700;
+      color: var(--gold-bright);
+      line-height: 1.15;
+      margin-bottom: 4px;
+    }
+
+    .card-keywords-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      justify-content: center;
+    }
+
+    .kw-chip {
+      font-size: 10.5px;
+      padding: 2px 6px;
+      border-radius: 5px;
+      background: rgba(255, 255, 255, 0.08);
+      color: #e9d8fd;
+      border: 1px solid rgba(212, 175, 55, 0.3);
+    }
+
+    /* ==================== KHUNG THÔNG ĐIỆP GIẢI NGHĨA ==================== */
+    .interpretation-panel {
+      width: 100%;
+      max-width: 960px;
+      background: rgba(14, 5, 30, 0.88);
+      backdrop-filter: blur(12px);
+      border: 2px solid var(--gold-main);
+      border-radius: 18px;
+      padding: 15px 22px;
+      box-shadow: 0 14px 36px rgba(0, 0, 0, 0.85);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      opacity: 0;
+      transform: translateY(14px);
+      transition: all 0.45s ease;
+    }
+
+    .interpretation-panel.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .interp-card-tabs {
+      display: flex;
+      gap: 8px;
+      border-bottom: 1px solid rgba(212, 175, 55, 0.28);
+      padding-bottom: 7px;
+    }
+
+    .interp-tab-badge {
+      padding: 4px 11px;
+      border-radius: 8px;
+      font-size: 13.5px;
+      font-weight: 600;
+      background: rgba(212, 175, 55, 0.14);
+      border: 1px solid rgba(212, 175, 55, 0.45);
+      color: var(--gold-bright);
+    }
+
+    .interp-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .interp-item {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(212, 175, 55, 0.25);
+      border-radius: 11px;
+      padding: 10px 14px;
+    }
+
+    .interp-item.highlighted {
+      background: rgba(212, 175, 55, 0.15);
+      border-color: var(--gold-bright);
+    }
+
+    .interp-item-title {
+      font-size: 13.5px;
+      font-weight: 700;
+      color: var(--gold-bright);
+      margin-bottom: 3px;
+      text-transform: uppercase;
+    }
+
+    .interp-item-text {
+      font-size: 16px;
+      line-height: 1.36;
+      color: var(--text-ivory);
+    }
+
+    .cosmic-advice-box {
+      background: linear-gradient(90deg, rgba(212, 175, 55, 0.2), rgba(147, 51, 234, 0.24));
+      border: 1.5px solid var(--gold-bright);
+      border-radius: 11px;
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .cosmic-advice-icon {
+      font-size: 26px;
+    }
+
+    .cosmic-advice-label {
+      font-size: 12.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--gold-bright);
+    }
+
+    .cosmic-advice-text {
+      font-size: 17.5px;
+      font-weight: 600;
+      color: #ffffff;
+    }
+
+    /* ==================== HÀNG CHỜ CÂU HỎI & HUD GÓC DƯỚI ==================== */
+    .bottom-hud {
+      position: absolute;
+      bottom: 42px;
+      left: 44px;
+      right: 44px;
+      z-index: 20;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 18px;
+    }
+
+    /* Dòng Disclaimer cố định chuẩn pháp lý TikTok */
+    .legal-disclaimer-bar {
+      position: absolute;
+      bottom: 9px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: calc(100% - 88px);
+      text-align: center;
+      font-size: 13.5px;
+      font-weight: 500;
+      color: rgba(254, 243, 199, 0.78);
+      background: rgba(13, 11, 26, 0.9);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(212, 175, 55, 0.32);
+      border-radius: 999px;
+      padding: 5px 16px;
+      letter-spacing: 0.35px;
+      z-index: 55;
+      pointer-events: none;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.65);
+    }
+
+    .queue-panel {
+      width: 640px;
+      background: rgba(11, 4, 24, 0.88);
+      backdrop-filter: blur(10px);
+      border: 1.5px solid rgba(212, 175, 55, 0.55);
+      border-radius: 15px;
+      padding: 12px 16px;
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.85);
+    }
+
+    .queue-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 6px;
+      padding-bottom: 5px;
+      border-bottom: 1px solid rgba(212, 175, 55, 0.25);
+    }
+
+    .queue-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--gold-bright);
+      text-transform: uppercase;
+    }
+
+    .queue-count-badge {
+      background: var(--gold-main);
+      color: #120424;
+      font-weight: 700;
+      font-size: 12.5px;
+      padding: 2px 9px;
+      border-radius: 999px;
+    }
+
+    .queue-list {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      max-height: 120px;
+      overflow: hidden;
+    }
+
+    .queue-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 5px 10px;
+      border-radius: 7px;
+      background: rgba(255, 255, 255, 0.05);
+      border-left: 3px solid var(--gold-main);
+      font-size: 14px;
+    }
+
+    .queue-row.vip {
+      background: linear-gradient(90deg, rgba(212, 175, 55, 0.24), rgba(255, 62, 127, 0.14));
+      border-left: 4px solid var(--gold-bright);
+    }
+
+    /* Hàng chờ VIP Mạ Vàng (Priority Fast-Pass Vị Trí Số 1) */
+    .queue-row.vip-fastpass {
+      background: linear-gradient(90deg, rgba(250, 204, 21, 0.35), rgba(245, 158, 11, 0.22), rgba(236, 72, 153, 0.2));
+      border: 2px solid #fde047;
+      box-shadow: 0 0 22px rgba(253, 224, 71, 0.75), inset 0 0 12px rgba(253, 224, 71, 0.35);
+      animation: goldNeonPulse 1.6s ease-in-out infinite;
+    }
+
+    .querent-banner.vip-gold-neon {
+      border: 2.5px solid #fde047 !important;
+      background: linear-gradient(90deg, rgba(66, 32, 6, 0.92), rgba(113, 63, 18, 0.92), rgba(66, 32, 6, 0.92)) !important;
+      box-shadow: 0 0 38px rgba(253, 224, 71, 0.85), inset 0 0 20px rgba(253, 224, 71, 0.4) !important;
+      animation: goldNeonPulse 1.8s ease-in-out infinite;
+    }
+
+    @keyframes goldNeonPulse {
+      0%, 100% { box-shadow: 0 0 20px rgba(253, 224, 71, 0.65), inset 0 0 12px rgba(253, 224, 71, 0.3); }
+      50% { box-shadow: 0 0 42px rgba(253, 224, 71, 1), inset 0 0 24px rgba(253, 224, 71, 0.6); }
+    }
+
+    /* Vòng Quay Năng Lượng Tình Duyên (Love Compatibility Radar) */
+    .love-radar-orb {
+      width: 215px;
+      height: 215px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(236, 72, 153, 0.38) 0%, rgba(88, 28, 135, 0.88) 68%, rgba(18, 6, 38, 0.96) 100%);
+      border: 3px solid #f472b6;
+      box-shadow: 0 0 42px rgba(236, 72, 153, 0.75), inset 0 0 28px rgba(251, 230, 155, 0.4);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      padding: 12px;
+      text-align: center;
+      flex-shrink: 0;
+    }
+
+    .love-radar-orb::before {
+      content: "";
+      position: absolute;
+      inset: -10px;
+      border-radius: 50%;
+      border: 2px dashed #fbe69b;
+      animation: spinRadar 10s linear infinite;
+    }
+
+    @keyframes spinRadar {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    .love-radar-score {
+      font-family: "Cormorant Garamond", serif;
+      font-size: 54px;
+      font-weight: 700;
+      color: #fde047;
+      line-height: 1;
+      text-shadow: 0 0 20px rgba(253, 224, 71, 0.9);
+    }
+
+    .love-radar-tier {
+      font-size: 13px;
+      font-weight: 700;
+      color: #fbcfe8;
+      margin-top: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+    }
+
+    .love-radar-pair {
+      font-size: 12.5px;
+      color: #fff;
+      margin-top: 4px;
+      background: rgba(236, 72, 153, 0.3);
+      padding: 3px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(244, 114, 182, 0.6);
+    }
+
+    .queue-user {
+      font-weight: 700;
+      color: var(--gold-bright);
+      white-space: nowrap;
+    }
+
+    .queue-q-text {
+      color: var(--text-ivory);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      flex: 1;
+    }
+
+    .cleanse-toast {
+      position: absolute;
+      top: 560px;
+      left: 50%;
+      transform: translate(-50%, -20px) scale(0.9);
+      background: linear-gradient(135deg, rgba(16, 68, 60, 0.96), rgba(28, 15, 56, 0.96));
+      border: 2px solid var(--emerald-cleanse);
+      box-shadow: 0 0 40px rgba(78, 245, 197, 0.6);
+      padding: 13px 28px;
+      border-radius: 999px;
+      z-index: 50;
+      font-size: 19px;
+      font-weight: 700;
+      color: #e6fffa;
+      white-space: nowrap;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .cleanse-toast.show {
+      opacity: 1;
+      transform: translate(-50%, 0) scale(1);
+    }
+
+    .status-orb-card {
+      background: rgba(11, 4, 24, 0.88);
+      backdrop-filter: blur(10px);
+      border: 1.5px solid rgba(212, 175, 55, 0.48);
+      border-radius: 15px;
+      padding: 11px 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 5px;
+      min-width: 290px;
+    }
+
+    .live-conn-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+
+    .status-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #fbbf24;
+      box-shadow: 0 0 10px #fbbf24;
+    }
+    .status-dot.online {
+      background: #34d399;
+      box-shadow: 0 0 12px #34d399;
+    }
+
+    .fullscreen-hint-btn {
+      background: rgba(212, 175, 55, 0.18);
+      border: 1px solid rgba(212, 175, 55, 0.5);
+      color: var(--gold-bright);
+      border-radius: 8px;
+      padding: 4px 10px;
+      font-size: 12px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="obs-stage" id="obsStage">
+    <!-- LỚP HÌNH NỀN CÔ PHÙ THỦY TRẢI BÀI TRÊN BÀN (GÓC RỘNG TỪ TRÊN XUỐNG) -->
+    <div class="witch-bg-layer" id="witchBgLayer"></div>
+    <div class="witch-vignette"></div>
+    <div class="witch-magic-aura" id="witchMagicAura"></div>
+
+    <!-- 4 Góc viền vàng kim -->
+    <div class="corner-ornament corner-tl"></div>
+    <div class="corner-ornament corner-tr"></div>
+    <div class="corner-ornament corner-bl"></div>
+    <div class="corner-ornament corner-br"></div>
+
+    <!-- Canvas Hiệu ứng Pháo Hoa Sao Băng khi đầy Thanh Năng Lượng Tập Thể -->
+    <canvas id="meteorFireworksCanvas" width="1080" height="1920"></canvas>
+
+    <!-- Thông báo Thanh Tẩy Bài -->
+    <div class="cleanse-toast" id="cleanseToast">
+      🔔 Chuông Xoay Ngân Vang — Cô Phù Thủy Đã Thanh Tẩy Bộ Bài!
+    </div>
+
+    <!-- HEADER MỎNG TRÊN ĐỈNH + THANH TIẾN TRÌNH NĂNG LƯỢNG TẬP THỂ -->
+    <header class="top-bar">
+      <div class="top-bar-row-1">
+        <div class="mystic-header-badge">
+          <span style="color: var(--gold-bright); font-size: 18px;">✦</span>
+          <span class="topic-label" id="topicLabel">CHỦ ĐỀ: TỔNG QUAN TUẦN MỚI</span>
+          <span style="color: var(--gold-bright); font-size: 18px;">✦</span>
+        </div>
+
+        <div class="cleanse-meter-wrap">
+          <span class="cleanse-meter-label" id="likeCounterText">✨ Thanh tẩy: 0 / 50 Tim</span>
+          <div class="cleanse-bar-bg">
+            <div class="cleanse-bar-fill" id="likeProgressBar"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. Thanh tiến trình "Năng Lượng Tập Thể" (Global Energy Bar: 5.000 Tim hoặc 50 Chia Sẻ) -->
+      <div class="global-energy-container" id="globalEnergyContainer">
+        <div class="global-energy-header">
+          <div class="global-energy-title">
+            <span>☄️ NĂNG LƯỢNG TẬP THỂ — MỞ KHÓA TỤ BÀI BÍ ẨN VŨ TRỤ</span>
+          </div>
+          <div class="global-energy-stats">
+            <span id="globalLikesCounter">❤️ 0 / 5.000 Tim</span>
+            <span>•</span>
+            <span id="globalSharesCounter">🔄 0 / 50 Chia Sẻ</span>
+            <span class="global-energy-pct-badge" id="globalEnergyPct">0%</span>
+          </div>
+        </div>
+        <div class="global-energy-track">
+          <div class="global-energy-fill" id="globalEnergyFill"></div>
+        </div>
+      </div>
+    </header>
+
+    <!-- KHOẢNG TRỐNG HIỂN THỊ RÕ KHUÔN MẶT & ĐÔI TAY CÔ PHÙ THỦY -->
+    <section class="witch-clear-viewport">
+      <!-- Bộ bài úp đặt gọn ở góc trái mặt bàn -->
+      <div class="deck-side-holder">
+        <div class="velvet-deck-stack" id="deckStack" title="Nhấn để Phù Thủy rút bài">
+          <div class="deck-layer"></div>
+          <div class="deck-layer"></div>
+          <div class="deck-layer">
+            <div class="deck-back-pattern">❂</div>
+          </div>
+          <div class="cleanse-Shockwave" id="cleanseWave"></div>
+        </div>
+      </div>
+
+      <!-- Thể lệ nhỏ gọn góc phải mặt bàn -->
+      <div class="table-rules-right">
+        <div class="rule-pill">💬 <strong>[Tên] - [Ngày/Tháng/Năm sinh]</strong> • 💘 Ghép đôi: <strong>#tinhyeu "Tên 1 - NS" "Tên 2 - NS"</strong></div>
+        <div class="rule-pill">🌹 <strong>1-9 xu</strong>: 1 Lá • 👑 <strong>50+ xu / Mũ miện</strong>: VIP Bật Đèn Lên Top 1</div>
+      </div>
+    </section>
+
+    <!-- MẶT BÀN TRẢI BÀI 3D & LUẬN GIẢI (NỬA DƯỚI MÀN HÌNH) -->
+    <main class="reading-arena">
+      <div class="querent-banner" id="querentBanner">
+        <div class="querent-info">
+          <div class="querent-handle-row">
+            <span class="querent-username" id="querentUsername">@HữuDuyên</span>
+            <span class="spread-badge" id="spreadBadge">Bàn Trải Bài Phù Thủy</span>
+          </div>
+          <div class="querent-question" id="querentQuestion">
+            "Hãy thả tim thanh tẩy bộ bài hoặc gửi câu hỏi bắt đầu bằng Hỏi: ..."
+          </div>
+        </div>
+      </div>
+
+      <!-- Sân khấu bài 3D trải trên mặt bàn -->
+      <div class="cards-stage-3d single-mode" id="cardsStage3D"></div>
+
+      <!-- Khung thông điệp giải nghĩa (Chỉ hiển thị đúng chủ đề tương ứng của từng lá bài) -->
+      <div class="interpretation-panel" id="interpPanel">
+        <div class="interp-card-tabs" id="interpTabs"></div>
+
+        <div class="interp-grid" id="interpGridSingleOrThree" style="grid-template-columns: 1fr;">
+          <div class="interp-item highlighted" id="loveBox" style="display: none;">
+            <div class="interp-item-title" id="loveBoxTitle">💖 Giải Mã Tình Yêu</div>
+            <div class="interp-item-text" id="loveText">—</div>
+          </div>
+          <div class="interp-item highlighted" id="careerBox" style="display: none;">
+            <div class="interp-item-title" id="careerBoxTitle">⚜️ Giải Mã Công Việc & Sự Nghiệp</div>
+            <div class="interp-item-text" id="careerText">—</div>
+          </div>
+        </div>
+
+        <div class="cosmic-advice-box" id="adviceBox" style="display: none;">
+          <div class="cosmic-advice-icon">🔮</div>
+          <div class="cosmic-advice-content">
+            <div class="cosmic-advice-label" id="adviceBoxTitle">Lời Khuyên Vũ Trụ</div>
+            <div class="cosmic-advice-text" id="adviceText">—</div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- HÀNG CHỜ CÂU HỎI & TRẠNG THÁI (GÓC DƯỚI) -->
+    <footer class="bottom-hud">
+      <div class="queue-panel">
+        <div class="queue-header">
+          <div class="queue-title">📜 Hàng Chờ Giải Mã</div>
+          <span class="queue-count-badge" id="queueCountBadge">0 người chờ</span>
+        </div>
+        <div class="queue-list" id="queueList">
+          <div class="queue-row">
+            <span class="queue-user">✨ Phù Thủy:</span>
+            <span class="queue-q-text">Chưa có câu hỏi trong hàng chờ. Hãy comment "Hỏi: ..." ngay!</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="status-orb-card">
+        <div class="live-conn-row">
+          <span class="status-dot" id="connDot"></span>
+          <span id="connStatusText">TikTok Live Studio Ready</span>
+        </div>
+        <div style="display: flex; gap: 6px; align-items: center;">
+          <span id="autoStatusBadge" style="font-size: 12px; color: var(--gold-bright);">🔊 Giọng Nữ 1.5x: Bật</span>
+          <button class="fullscreen-hint-btn" id="btnFullscreen" title="Phóng toàn màn hình để Quay Cửa Sổ trong TikTok Live Studio">
+            ⛶ Toàn màn hình (F)
+          </button>
+        </div>
+      </div>
+    </footer>
+
+    <!-- DÒNG DISCLAIMER PHÁP LÝ CỐ ĐỊNH CHUẨN QUY ĐỊNH TIKTOK LIVE -->
+    <div class="legal-disclaimer-bar">
+      ⚖️ Nội dung mang tính chất giải trí, chiêm nghiệm tích cực, không mang tính mê tín dị đoan
+    </div>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/tarot_data.js"></script>
+  <script>
+    function fitObsStage() {
+      const stage = document.getElementById("obsStage");
+      const scaleX = window.innerWidth / 1080;
+      const scaleY = window.innerHeight / 1920;
+      const scale = Math.min(scaleX, scaleY);
+      stage.style.transform = `scale(${scale})`;
+    }
+    window.addEventListener("resize", fitObsStage);
+    fitObsStage();
+
+    function toggleFullscreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(() => {});
+      } else {
+        document.exitFullscreen().catch(() => {});
+      }
+    }
+    document.getElementById("btnFullscreen").addEventListener("click", toggleFullscreen);
+    window.addEventListener("keydown", (e) => {
+      if (e.key.toLowerCase() === "f") toggleFullscreen();
+    });
+
+    // ==================== WEB AUDIO API + 3 BÀI NHẠC NỀN TAROT DU DƯƠNG + GIỌNG NỮ X1.5 ====================
+    class MysticSoundEngine {
+      constructor() {
+        this.ctx = null;
+        this.voiceEnabled = true;
+        this.voiceSpeed = 1.5; // Tốc độ nhanh x1.5 lần nhưng giữ nguyên tông giọng nữ trầm ấm (preservesPitch)
+        this.activeAudioEl = null;
+
+        // Hệ thống 3 bài nhạc nền Tarot nhẹ nhàng, du dương (Web Audio Melodic Synthesizer)
+        this.bgmEnabled = true;
+        this.bgmTrack = 1; // 1: Đêm Trăng Thạch Anh | 2: Suối Nguồn Chữa Lành | 3: Vườn Địa Đàng Huyền Bí
+        this.bgmVolume = 0.35;
+        this.bgmMasterGain = null;
+        this.bgmDelayNode = null;
+        this.bgmFeedbackGain = null;
+        this.bgmTimer = null;
+        this.bgmStep = 0;
+        this.isVoiceSpeaking = false;
+      }
+
+      ensureContext() {
+        if (!this.ctx) {
+          const AudioCtx = window.AudioContext || window.webkitAudioContext;
+          this.ctx = new AudioCtx();
+        }
+        if (this.ctx.state === "suspended") {
+          this.ctx.resume();
+        }
+        if (!this.bgmMasterGain && this.ctx) {
+          this.bgmMasterGain = this.ctx.createGain();
+          this.bgmMasterGain.gain.setValueAtTime(this.bgmVolume * 0.28, this.ctx.currentTime);
+
+          // Hiệu ứng vang (Warm Echo Reverb) giúp tiếng đàn hạc / piano ngân nga du dương
+          this.bgmDelayNode = this.ctx.createDelay(2.0);
+          this.bgmDelayNode.delayTime.setValueAtTime(0.42, this.ctx.currentTime);
+          this.bgmFeedbackGain = this.ctx.createGain();
+          this.bgmFeedbackGain.gain.setValueAtTime(0.36, this.ctx.currentTime);
+
+          const warmLowpass = this.ctx.createBiquadFilter();
+          warmLowpass.type = "lowpass";
+          warmLowpass.frequency.setValueAtTime(1850, this.ctx.currentTime);
+
+          this.bgmMasterGain.connect(warmLowpass);
+          warmLowpass.connect(this.ctx.destination);
+
+          warmLowpass.connect(this.bgmDelayNode);
+          this.bgmDelayNode.connect(this.bgmFeedbackGain);
+          this.bgmFeedbackGain.connect(this.bgmDelayNode);
+          this.bgmDelayNode.connect(this.ctx.destination);
+        }
+      }
+
+      // Điều chỉnh cấu hình Nhạc nền Tarot (Bật/Tắt, Đổi bài 1-2-3, Âm lượng)
+      configureBgm({ enabled, track, volume } = {}) {
+        if (typeof enabled === "boolean") this.bgmEnabled = enabled;
+        if (track !== undefined && Number(track) >= 1 && Number(track) <= 3) {
+          if (this.bgmTrack !== Number(track)) {
+            this.bgmTrack = Number(track);
+            this.bgmStep = 0;
+          }
+        }
+        if (volume !== undefined) {
+          this.bgmVolume = Math.max(0, Math.min(1, Number(volume)));
+        }
+
+        if (this.bgmMasterGain && this.ctx) {
+          const targetGain = this.bgmEnabled
+            ? this.bgmVolume * (this.isVoiceSpeaking ? 0.1 : 0.28)
+            : 0.0001;
+          this.bgmMasterGain.gain.setTargetAtTime(targetGain, this.ctx.currentTime, 0.25);
+        }
+
+        if (this.bgmEnabled) {
+          this.startBgmLoop();
+        } else {
+          this.stopBgmLoop();
+        }
+      }
+
+      startBgmLoop() {
+        if (this.bgmTimer) return;
+        this.bgmStep = 0;
+
+        // 3 Giai điệu Tarot du dương, nhẹ nhàng (Hợp âm Pad + Nốt giai điệu Đàn Hạc / Piano / Music Box)
+        const TRACKS = {
+          // Bài 1: Đêm Trăng Thạch Anh (Đàn Hạc & Chuông Gió 432Hz - Am -> F -> C -> G)
+          1: {
+            intervalMs: 650,
+            wave: "sine",
+            padWave: "triangle",
+            noteLen: 1.9,
+            chords: [
+              [220.0, 261.63, 329.63], // Am
+              [174.61, 220.0, 261.63], // F
+              [196.0, 261.63, 329.63], // C
+              [196.0, 246.94, 293.66]  // G
+            ],
+            melody: [
+              440.0, 523.25, 659.25, 587.33, 523.25, 440.0, 329.63, 392.0,
+              349.23, 440.0, 523.25, 659.25, 587.33, 523.25, 493.88, 440.0,
+              523.25, 659.25, 783.99, 659.25, 523.25, 392.0, 440.0, 523.25,
+              392.0, 493.88, 587.33, 659.25, 587.33, 493.88, 392.0, 329.63
+            ]
+          },
+          // Bài 2: Suối Nguồn Chữa Lành (Piano Êm Dịu & Sáo Thiền 528Hz - Fmaj7 -> Em7 -> Dm7 -> Cmaj7)
+          2: {
+            intervalMs: 780,
+            wave: "triangle",
+            padWave: "sine",
+            noteLen: 2.3,
+            chords: [
+              [174.61, 220.0, 261.63], // Fmaj7
+              [164.81, 196.0, 246.94], // Em7
+              [146.83, 174.61, 220.0], // Dm7
+              [130.81, 164.81, 196.0]  // Cmaj7
+            ],
+            melody: [
+              523.25, 440.0, 349.23, 392.0, 523.25, 587.33, 523.25, 440.0,
+              493.88, 392.0, 329.63, 392.0, 493.88, 523.25, 392.0, 329.63,
+              440.0, 349.23, 293.66, 349.23, 440.0, 523.25, 440.0, 392.0,
+              392.0, 329.63, 261.63, 329.63, 392.0, 523.25, 493.88, 392.0
+            ]
+          },
+          // Bài 3: Vườn Địa Đàng Huyền Bí (Music Box Cổ Điển & Dây Ngân Hà - Em -> Cmaj7 -> Am7 -> B7)
+          3: {
+            intervalMs: 560,
+            wave: "sine",
+            padWave: "sine",
+            noteLen: 1.65,
+            chords: [
+              [164.81, 196.0, 246.94], // Em
+              [196.0, 246.94, 329.63], // Cmaj7
+              [220.0, 261.63, 329.63], // Am7
+              [185.0, 246.94, 293.66]  // Bm/B7
+            ],
+            melody: [
+              659.25, 783.99, 987.77, 783.99, 659.25, 493.88,
+              523.25, 659.25, 783.99, 659.25, 523.25, 392.0,
+              440.0, 523.25, 659.25, 523.25, 440.0, 329.63,
+              493.88, 587.33, 739.99, 587.33, 493.88, 392.0
+            ]
+          }
+        };
+
+        const tick = () => {
+          if (!this.bgmEnabled) {
+            this.bgmTimer = null;
+            return;
+          }
+          const trackCfg = TRACKS[this.bgmTrack] || TRACKS[1];
+          try {
+            this.ensureContext();
+            if (this.ctx && this.ctx.state === "running") {
+              const now = this.ctx.currentTime;
+              const step = this.bgmStep;
+              const melodyNotes = trackCfg.melody;
+              const noteFreq = melodyNotes[step % melodyNotes.length];
+
+              // Đánh nốt giai điệu chính (Đàn hạc / Piano / Music Box)
+              const osc = this.ctx.createOscillator();
+              const noteGain = this.ctx.createGain();
+              osc.type = trackCfg.wave;
+              osc.frequency.setValueAtTime(noteFreq, now);
+
+              noteGain.gain.setValueAtTime(0.0001, now);
+              noteGain.gain.linearRampToValueAtTime(0.18, now + 0.06);
+              noteGain.gain.exponentialRampToValueAtTime(0.0001, now + trackCfg.noteLen);
+
+              osc.connect(noteGain);
+              noteGain.connect(this.bgmMasterGain);
+              osc.start(now);
+              osc.stop(now + trackCfg.noteLen + 0.05);
+
+              // Mỗi 6 nhịp rải 1 hợp âm nền Pad ấm áp du dương
+              if (step % 6 === 0) {
+                const chordIdx = Math.floor(step / 6) % trackCfg.chords.length;
+                const chord = trackCfg.chords[chordIdx];
+                chord.forEach((cFreq) => {
+                  const padOsc = this.ctx.createOscillator();
+                  const padGain = this.ctx.createGain();
+                  padOsc.type = trackCfg.padWave;
+                  padOsc.frequency.setValueAtTime(cFreq, now);
+
+                  const padDur = (trackCfg.intervalMs * 6) / 1000;
+                  padGain.gain.setValueAtTime(0.0001, now);
+                  padGain.gain.linearRampToValueAtTime(0.075, now + 0.6);
+                  padGain.gain.exponentialRampToValueAtTime(0.0001, now + padDur);
+
+                  padOsc.connect(padGain);
+                  padGain.connect(this.bgmMasterGain);
+                  padOsc.start(now);
+                  padOsc.stop(now + padDur + 0.1);
+                });
+              }
+
+              this.bgmStep++;
+            }
+          } catch (_) {}
+
+          this.bgmTimer = setTimeout(tick, trackCfg.intervalMs);
+        };
+
+        tick();
+      }
+
+      stopBgmLoop() {
+        if (this.bgmTimer) {
+          clearTimeout(this.bgmTimer);
+          this.bgmTimer = null;
+        }
+      }
+
+      playSingingBowl() {
+        try {
+          this.ensureContext();
+          const now = this.ctx.currentTime;
+          const harmonics = [
+            { freq: 432, gain: 0.24, duration: 4.2 },
+            { freq: 864, gain: 0.12, duration: 3.4 },
+            { freq: 1296, gain: 0.06, duration: 2.5 }
+          ];
+
+          harmonics.forEach((h) => {
+            const osc = this.ctx.createOscillator();
+            const gainNode = this.ctx.createGain();
+            osc.type = "sine";
+            osc.frequency.setValueAtTime(h.freq, now);
+
+            const lfo = this.ctx.createOscillator();
+            const lfoGain = this.ctx.createGain();
+            lfo.frequency.setValueAtTime(4.5, now);
+            lfoGain.gain.setValueAtTime(2.2, now);
+            lfo.connect(lfoGain);
+            lfoGain.connect(osc.frequency);
+
+            gainNode.gain.setValueAtTime(0.0001, now);
+            gainNode.gain.exponentialRampToValueAtTime(h.gain, now + 0.08);
+            gainNode.gain.exponentialRampToValueAtTime(0.0001, now + h.duration);
+
+            osc.connect(gainNode);
+            gainNode.connect(this.ctx.destination);
+
+            osc.start(now);
+            lfo.start(now);
+            osc.stop(now + h.duration);
+            lfo.stop(now + h.duration);
+          });
+        } catch (_) {}
+      }
+
+      playCardFlip(delaySec = 0) {
+        try {
+          this.ensureContext();
+          const start = this.ctx.currentTime + delaySec;
+
+          const bufferSize = this.ctx.sampleRate * 0.16;
+          const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+          const data = buffer.getChannelData(0);
+          for (let i = 0; i < bufferSize; i++) {
+            data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (bufferSize * 0.45));
+          }
+
+          const noise = this.ctx.createBufferSource();
+          noise.buffer = buffer;
+
+          const filter = this.ctx.createBiquadFilter();
+          filter.type = "bandpass";
+          filter.frequency.setValueAtTime(1100, start);
+          filter.frequency.exponentialRampToValueAtTime(420, start + 0.15);
+
+          const noiseGain = this.ctx.createGain();
+          noiseGain.gain.setValueAtTime(0.18, start);
+          noiseGain.gain.exponentialRampToValueAtTime(0.001, start + 0.16);
+
+          noise.connect(filter);
+          filter.connect(noiseGain);
+          noiseGain.connect(this.ctx.destination);
+          noise.start(start);
+
+          const chime = this.ctx.createOscillator();
+          const chimeGain = this.ctx.createGain();
+          chime.type = "triangle";
+          chime.frequency.setValueAtTime(528, start + 0.08);
+          chime.frequency.exponentialRampToValueAtTime(792, start + 0.45);
+
+          chimeGain.gain.setValueAtTime(0.001, start + 0.08);
+          chimeGain.gain.linearRampToValueAtTime(0.12, start + 0.12);
+          chimeGain.gain.exponentialRampToValueAtTime(0.0001, start + 0.65);
+
+          chime.connect(chimeGain);
+          chimeGain.connect(this.ctx.destination);
+          chime.start(start + 0.08);
+          chime.stop(start + 0.65);
+        } catch (_) {}
+      }
+
+      getVietnameseCardName(fullName = "") {
+        const parts = String(fullName).split(" - ");
+        return parts.length > 1 ? parts[1].trim() : fullName.trim();
+      }
+
+      cleanTextForSpeech(str = "") {
+        return String(str)
+          .replace(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]/gu, "")
+          .replace(/[@#*~_]/g, "")
+          .replace(/\s+/g, " ")
+          .trim();
+      }
+
+      formatDobForSpeech(dob = "") {
+        const s = String(dob).trim();
+        const dmyMatch = s.match(/^(\d{1,2})[\/\-\.](\d{1,2})[\/\-\.](\d{2,4})$/);
+        if (dmyMatch) {
+          const d = parseInt(dmyMatch[1], 10);
+          const m = parseInt(dmyMatch[2], 10);
+          const y = dmyMatch[3].length === 2 ? "20" + dmyMatch[3] : dmyMatch[3];
+          return `sinh ngày ${d} tháng ${m} năm ${y}`;
+        }
+        const yMatch = s.match(/^(\d{4})$/);
+        if (yMatch) {
+          return `sinh năm ${yMatch[1]}`;
+        }
+        return s ? `sinh ${s}` : "";
+      }
+
+      formatPersonForSpeech(person = "") {
+        const p = String(person).trim();
+        const match = p.match(/^([a-zA-ZÀ-ỹ\s0-9_]+)\s*[-–:]\s*(\d{1,2}[\/\-\.]\d{1,2}[\/\-\.]\d{2,4}|\d{4})$/i);
+        if (match) {
+          const name = match[1].trim();
+          const dobSpeech = this.formatDobForSpeech(match[2].trim());
+          return `bạn ${name} ${dobSpeech}`.trim();
+        }
+        return p;
+      }
+
+      // Phát giọng đọc Nữ Tiếng Việt tốc độ x1.5 nhưng giữ nguyên độ trầm ấm dịu dàng (preservesPitch = true)
+      async speakVietnameseFemale(rawText, onEnded) {
+        let hasCalledOnEnded = false;
+        const triggerEnded = () => {
+          if (!hasCalledOnEnded) {
+            hasCalledOnEnded = true;
+            if (typeof onEnded === "function") onEnded();
+          }
+        };
+
+        if (!this.voiceEnabled) {
+          triggerEnded();
+          return;
+        }
+        const cleanText = this.cleanTextForSpeech(rawText);
+        if (!cleanText) {
+          triggerEnded();
+          return;
+        }
+
+        // Tính thời gian đọc dự kiến phòng trường hợp lỗi mạng hoặc trình duyệt chặn autoplay:
+        // Với tiếng Việt tốc độ 1.5x, trung bình đọc khoảng 3.2 - 3.5 từ / giây.
+        const wordCount = cleanText.split(/\s+/).filter(Boolean).length;
+        const fallbackDurationMs = Math.max(9000, Math.round((wordCount / 3.2) * 1000));
+
+        // Tăng id lượt nói để hủy bỏ mọi fetch cũ đang chờ nếu có câu mới đến
+        this.currentSpeechId = (this.currentSpeechId || 0) + 1;
+        const speechId = this.currentSpeechId;
+
+        try {
+          if (this.activeAudioEl) {
+            try {
+              this.activeAudioEl.pause();
+              this.activeAudioEl.src = "";
+            } catch (_) {}
+            this.activeAudioEl = null;
+          }
+
+          const res = await fetch(`/api/tts?text=${encodeURIComponent(cleanText)}`);
+          if (!res.ok) throw new Error("TTS API error: " + res.status);
+
+          // Nếu có yêu cầu nói mới đến trong khi đang fetch thì hủy lượt cũ này
+          if (speechId !== this.currentSpeechId) {
+            return;
+          }
+
+          const blob = await res.blob();
+          if (speechId !== this.currentSpeechId) {
+            return;
+          }
+
+          const blobUrl = URL.createObjectURL(blob);
+          const audio = new Audio(blobUrl);
+
+          // Phát âm thanh trực tiếp qua Audio HTML5:
+          // Đảm bảo không bị lỗi do Web Audio suspended hoặc OBS CEF restrictions.
+          // Tốc độ 1.5x giữ nguyên cao độ giọng nữ ấm tự nhiên (preservesPitch = true).
+          audio.playbackRate = Number(this.voiceSpeed) || 1.5;
+          audio.preservesPitch = true;
+          audio.mozPreservesPitch = true;
+          audio.webkitPreservesPitch = true;
+          audio.volume = 1.0;
+
+          // Auto-ducking nhạc nền khi giọng nói cất lên
+          this.isVoiceSpeaking = true;
+          if (this.bgmMasterGain && this.bgmEnabled && this.ctx && this.ctx.state === "running") {
+            try {
+              this.bgmMasterGain.gain.setTargetAtTime(this.bgmVolume * 0.09, this.ctx.currentTime, 0.2);
+            } catch (_) {}
+          }
+
+          const cleanup = () => {
+            URL.revokeObjectURL(blobUrl);
+            this.isVoiceSpeaking = false;
+            if (this.bgmMasterGain && this.bgmEnabled && this.ctx && this.ctx.state === "running") {
+              try {
+                this.bgmMasterGain.gain.setTargetAtTime(this.bgmVolume * 0.28, this.ctx.currentTime, 0.4);
+              } catch (_) {}
+            }
+          };
+
+          audio.onended = () => {
+            cleanup();
+            triggerEnded();
+          };
+
+          audio.onerror = (e) => {
+            console.warn("⚠️ [TTS Audio Error] Không phát được audio, dùng timer dự phòng:", e);
+            cleanup();
+            setTimeout(triggerEnded, fallbackDurationMs);
+          };
+
+          this.activeAudioEl = audio;
+
+          // Bắt đầu phát âm thanh
+          try {
+            await audio.play();
+          } catch (playErr) {
+            console.warn("⚠️ [Autoplay Blocked] Trình duyệt chặn âm thanh tự động, giữ bài đọc trên màn hình trong", fallbackDurationMs, "ms:", playErr?.message);
+            cleanup();
+            setTimeout(triggerEnded, fallbackDurationMs);
+          }
+        } catch (err) {
+          console.warn("⚠️ [TTS Fetch Error] Lỗi gọi giọng đọc TTS, chuyển sang timer đọc dự phòng:", err?.message);
+          this.isVoiceSpeaking = false;
+          setTimeout(triggerEnded, fallbackDurationMs);
+        }
+      }
+
+      // Hiệu ứng âm thanh đặc biệt "VIP BẬT ĐÈN" (Golden Royal Fanfare Arpeggio)
+      playVipFastPassFanfare() {
+        try {
+          this.ensureContext();
+          const now = this.ctx.currentTime;
+          const notes = [523.25, 659.25, 783.99, 1046.5, 1318.5]; // C5 - E5 - G5 - C6 - E6
+          notes.forEach((freq, i) => {
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+            osc.type = "triangle";
+            const startTime = now + i * 0.085;
+            osc.frequency.setValueAtTime(freq, startTime);
+
+            gain.gain.setValueAtTime(0.001, startTime);
+            gain.gain.linearRampToValueAtTime(0.22, startTime + 0.03);
+            gain.gain.exponentialRampToValueAtTime(0.0001, startTime + 1.1);
+
+            osc.connect(gain);
+            gain.connect(this.ctx.destination);
+            osc.start(startTime);
+            osc.stop(startTime + 1.15);
+          });
+        } catch (_) {}
+      }
+
+      // Hiệu ứng âm thanh Nổ Pháo Hoa Sao Băng (Meteor Shower & Starburst Chimes)
+      playMeteorFireworksSound() {
+        try {
+          this.ensureContext();
+          const now = this.ctx.currentTime;
+          // Chuỗi chuông sao băng lấp lánh
+          const starFreqs = [587.33, 783.99, 987.77, 1174.66, 1567.98, 1975.53];
+          starFreqs.forEach((freq, idx) => {
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+            osc.type = "sine";
+            const t0 = now + idx * 0.09;
+            osc.frequency.setValueAtTime(freq, t0);
+            gain.gain.setValueAtTime(0.001, t0);
+            gain.gain.linearRampToValueAtTime(0.24, t0 + 0.03);
+            gain.gain.exponentialRampToValueAtTime(0.0001, t0 + 1.4);
+            osc.connect(gain);
+            gain.connect(this.ctx.destination);
+            osc.start(t0);
+            osc.stop(t0 + 1.45);
+          });
+        } catch (_) {}
+      }
+
+      speakReading(reading, onEnded) {
+        if (!this.voiceEnabled || !reading || !reading.cards || !reading.cards.length) {
+          if (typeof onEnded === "function") onEnded();
+          return;
+        }
+
+        const viewerRaw = this.cleanTextForSpeech(
+          reading.seekerName || reading.user?.nickname || reading.user?.uniqueId || "bạn hữu duyên"
+        );
+        const cards = reading.cards;
+
+        // Trường hợp 0: Mở Khóa Tụ Bài Bí Ẩn Chung Cho Toàn Phòng Live (Đạt 5.000 Tim / 50 Chia Sẻ)
+        if (reading.spreadType === "global_mystery" || reading.isGlobalMystery) {
+          const c = cards[0];
+          const vnName = this.getVietnameseCardName(c.name);
+          const orient = c.isReversed ? "chiều ngược" : "chiều xuôi";
+          const s1 = c.cardExplanation || `Lá bài ${vnName} ở ${orient}: ${c.advice}`;
+          const s2 =
+            c.questionConclusion ||
+            `Chúc toàn thể khán giả đang thả tim và chia sẻ trong phòng Live đón nhận phước lành và tài lộc rực rỡ!`;
+          const script =
+            `Chúc mừng toàn thể khán giả trong phòng Live! Thanh năng lượng tập thể đã đầy một trăm phần trăm và kích hoạt mưa sao băng mở khóa Tụ Bài Bí Ẩn Vũ Trụ. ` +
+            `${s1} ${s2}`;
+          this.speakVietnameseFemale(script, onEnded);
+          return;
+        }
+
+        // Trường hợp 1: Bói Ghép Đôi / Đo Độ Hợp Nhau (Love Compatibility Radar)
+        if (reading.spreadType === "love_match" && reading.loveMatch) {
+          const lm = reading.loveMatch;
+          const cardAName = this.getVietnameseCardName(cards[0].name);
+          const cardBName = this.getVietnameseCardName(cards[1]?.name || cards[0].name);
+          const labelA = this.formatPersonForSpeech(lm.personA);
+          const labelB = this.formatPersonForSpeech(lm.personB);
+          const script =
+            `Chào bạn ${viewerRaw}. Vòng quay năng lượng tình duyên giữa ${labelA} và ${labelB} vừa dừng lại ở mức ${lm.score} phần trăm, đạt cấp độ ${lm.matchTier}. ` +
+            `Lá bài đại diện cho ${labelA} là ${cardAName}, còn lá bài của ${labelB} là ${cardBName}. ` +
+            `Lời khuyên tình duyên cho hai bạn là: ${lm.matchAdvice}`;
+          this.speakVietnameseFemale(script, onEnded);
+          return;
+        }
+
+        // Trường hợp 2: Bốc 1 Lá hoặc Trải 3 Lá (Kèm thông báo VIP Mạ Vàng nếu có)
+        const seekerDobSpeech = reading.seekerDob ? this.formatDobForSpeech(reading.seekerDob) : "";
+        const vipPrefix = reading.isVipFastPass
+          ? `Đặc quyền V I P mạ vàng đã bật đèn cho ${viewerRaw}! `
+          : `Chào bạn ${viewerRaw}${seekerDobSpeech ? ` ${seekerDobSpeech}` : ""} thương mến. `;
+
+        if (cards.length === 1) {
+          const c = cards[0];
+          const vnName = this.getVietnameseCardName(c.name);
+          const orient = c.isReversed ? "chiều ngược" : "chiều xuôi";
+          const aspect = c.assignedAspect || reading.detectedAspect || "advice";
+          const coreMeaning =
+            aspect === "love" ? c.love : aspect === "career" ? c.career : c.advice;
+
+          const sentence1 =
+            c.cardExplanation ||
+            `Lá bài ${vnName} ở ${orient} mang ý nghĩa: ${coreMeaning}`;
+          const sentence2 =
+            c.questionConclusion ||
+            `Chốt lại cho câu hỏi của bạn: ${c.advice}`;
+
+          const script = `${vipPrefix}Lắng nghe câu hỏi của bạn, mình vừa rút được lá bài ${vnName} ở ${orient}. ${sentence1} ${sentence2}`;
+          this.speakVietnameseFemale(script, onEnded);
+        } else {
+          const card1Name = this.getVietnameseCardName(cards[0].name);
+          const card2Name = this.getVietnameseCardName(cards[1].name);
+          const card3Name = this.getVietnameseCardName(cards[2].name);
+          const conclusionText =
+            cards[2].questionConclusion || cards[0].questionConclusion || cards[2].advice;
+          const script =
+            vipPrefix +
+            `Trải bài ba lá của bạn đã mở ra. ` +
+            `Lá thứ nhất về Tình Yêu là ${card1Name}: ${cards[0].love} ` +
+            `Lá thứ hai về Công Việc là ${card2Name}: ${cards[1].career} ` +
+            `Lá thứ ba về Lời Khuyên là ${card3Name}: ${cards[2].advice} ` +
+            `${conclusionText}`;
+          this.speakVietnameseFemale(script, onEnded);
+        }
+      }
+    }
+
+    const soundEngine = new MysticSoundEngine();
+    document.body.addEventListener("pointerdown", () => {
+      soundEngine.ensureContext();
+      if (soundEngine.bgmEnabled) soundEngine.startBgmLoop();
+    });
+
+    // ==================== HÌNH ẢNH LÁ BÀI TAROT RIDER-WAITE-SMITH THẬT ====================
+    function getClientRwsCode(cardId = 0) {
+      const id = Number(cardId) || 0;
+      if (id >= 0 && id <= 21) return `m${String(id).padStart(2, "0")}`;
+      const suitPrefixes = ["w", "c", "s", "p"];
+      const minorIdx = id - 22;
+      const suitIdx = Math.floor(minorIdx / 14);
+      const rankNum = (minorIdx % 14) + 1;
+      return `${suitPrefixes[suitIdx] || "m"}${String(rankNum).padStart(2, "0")}`;
+    }
+
+    function createTarotArtworkSVG(card) {
+      const rwsCode = getClientRwsCode(card.id);
+      const localUrl = `/api/card-img/${rwsCode}`;
+      const cdnUrl = `https://cdn.jsdelivr.net/gh/metabismuth/tarot-json@master/cards/${rwsCode}.jpg`;
+      const romanNumerals = [
+        "0", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X",
+        "XI", "XII", "XIII", "XIV", "XV", "XVI", "XVII", "XVIII", "XIX", "XX", "XXI"
+      ];
+      const headerLabel =
+        card.arcana === "Major"
+          ? romanNumerals[card.id] || `#${card.id}`
+          : (card.name || "").split("-")[0].trim().toUpperCase();
+
+      return `
+        <img
+          class="rws-card-photo"
+          src="${localUrl}"
+          alt="${card.name}"
+          loading="eager"
+          onerror="if(!this.dataset.triedCdn){this.dataset.triedCdn='1';this.src='${cdnUrl}';}else{this.style.display='none';this.nextElementSibling.style.display='block';}"
+        />
+        <svg style="display:none;" viewBox="0 0 220 270" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+          <rect x="6" y="6" width="208" height="258" rx="8" fill="#1b0933" stroke="#eab308" stroke-width="2"/>
+          <rect x="14" y="14" width="192" height="242" rx="4" fill="none" stroke="rgba(251,230,155,0.45)" stroke-width="1"/>
+          <circle cx="110" cy="135" r="64" fill="none" stroke="#f5d372" stroke-opacity="0.55" stroke-width="1.5"/>
+          <polygon points="110,68 128,114 176,114 138,144 152,190 110,162 68,190 82,144 44,114 92,114" fill="rgba(253,224,71,0.18)" stroke="#fde047" stroke-width="1.5"/>
+          <text x="110" y="38" text-anchor="middle" fill="#fbe69b" font-family="Cormorant Garamond, serif" font-size="16" font-weight="bold">
+            ${headerLabel}
+          </text>
+          <text x="110" y="236" text-anchor="middle" fill="#fbe69b" font-family="Cormorant Garamond, serif" font-size="14" font-weight="bold">
+            ${(card.name || "").split("-")[0].trim()}
+          </text>
+        </svg>
+      `;
+    }
+
+    const cardsStage3D = document.getElementById("cardsStage3D");
+    const interpPanel = document.getElementById("interpPanel");
+    const interpTabs = document.getElementById("interpTabs");
+    const loveBox = document.getElementById("loveBox");
+    const careerBox = document.getElementById("careerBox");
+    const witchBgLayer = document.getElementById("witchBgLayer");
+    const witchMagicAura = document.getElementById("witchMagicAura");
+
+    function triggerWitchSpellCast() {
+      witchBgLayer.classList.add("casting-spell");
+      witchMagicAura.classList.remove("cast");
+      void witchMagicAura.offsetWidth;
+      witchMagicAura.classList.add("cast");
+      setTimeout(() => witchBgLayer.classList.remove("casting-spell"), 1200);
+    }
+
+    function applyStudioConfig(cfg = {}) {
+      soundEngine.voiceEnabled = Boolean(cfg.voiceTTS);
+      if (cfg.voiceSpeed) soundEngine.voiceSpeed = Number(cfg.voiceSpeed) || 1.5;
+
+      soundEngine.configureBgm({
+        enabled: cfg.bgmEnabled !== undefined ? Boolean(cfg.bgmEnabled) : true,
+        track: cfg.bgmTrack || 1,
+        volume: cfg.bgmVolume !== undefined ? Number(cfg.bgmVolume) : 0.35
+      });
+
+      const trackShortNames = { 1: "🎵 Đêm Trăng", 2: "🎵 Suối Nguồn", 3: "🎵 Vườn Huyền Bí" };
+      const bgmBadge = soundEngine.bgmEnabled
+        ? ` • ${trackShortNames[soundEngine.bgmTrack] || "🎵 Nhạc Tarot"}`
+        : " • 🔇 Nhạc: Tắt";
+
+      document.getElementById("autoStatusBadge").textContent =
+        `${cfg.voiceTTS ? `🔊 Giọng Nữ ${soundEngine.voiceSpeed}x` : "🔇 Giọng: Tắt"}${bgmBadge}`;
+
+      document.body.classList.remove("bg-mode-chroma", "bg-mode-transparent");
+      if (cfg.bgMode === "chroma") {
+        document.body.classList.add("bg-mode-chroma");
+      } else if (cfg.bgMode === "transparent") {
+        document.body.classList.add("bg-mode-transparent");
+      } else if (cfg.customBgUrl) {
+        witchBgLayer.style.backgroundImage = `url("${cfg.customBgUrl}?v=${Date.now()}")`;
+      }
+    }
+
+    function updateTopicUI(topic) {
+      if (!topic) return;
+      document.getElementById("topicLabel").textContent = `CHỦ ĐỀ: ${topic.toUpperCase()}`;
+      loveBox.classList.remove("highlighted");
+      careerBox.classList.remove("highlighted");
+
+      if (topic.toLowerCase().includes("tình duyên")) {
+        loveBox.classList.add("highlighted");
+      } else if (topic.toLowerCase().includes("sự nghiệp")) {
+        careerBox.classList.add("highlighted");
+      } else {
+        loveBox.classList.add("highlighted");
+        careerBox.classList.add("highlighted");
+      }
+    }
+
+    const adviceBox = document.getElementById("adviceBox");
+    const interpGridSingleOrThree = document.getElementById("interpGridSingleOrThree");
+
+    function showCardInterpretation(card, index, reading = null) {
+      let aspect = card.assignedAspect;
+      if (!aspect) {
+        if (reading && reading.cardCount === 3) {
+          aspect = ["love", "career", "advice"][index] || "advice";
+        } else if (reading && reading.spreadType === "love_match") {
+          aspect = "love";
+        } else {
+          aspect = reading?.detectedAspect || "advice";
+        }
+      }
+
+      loveBox.style.display = "none";
+      careerBox.style.display = "none";
+      adviceBox.style.display = "none";
+      interpGridSingleOrThree.style.display = "none";
+
+      const sentence1CardMeaning =
+        card.cardExplanation ||
+        `Lá bài ${card.name} (${card.isReversed ? "chiều Ngược" : "chiều Xuôi"}): ${
+          aspect === "love" ? card.love : aspect === "career" ? card.career : card.advice
+        }`;
+      const sentence2DirectConclusion =
+        card.questionConclusion || `Chốt lại cho câu hỏi của bạn: ${card.advice}`;
+
+      // Phần 1 (Khung trên): 1 câu giải thích về lá bài
+      interpGridSingleOrThree.style.display = "grid";
+      if (aspect === "career") {
+        careerBox.style.display = "block";
+        document.getElementById("careerBoxTitle").textContent =
+          `🃏 1. Giải Nghĩa Lá Bài — ${card.name}`;
+        document.getElementById("careerText").textContent = sentence1CardMeaning;
+      } else {
+        loveBox.style.display = "block";
+        document.getElementById("loveBoxTitle").textContent =
+          `🃏 1. Giải Nghĩa Lá Bài — ${card.name}`;
+        document.getElementById("loveText").textContent = sentence1CardMeaning;
+      }
+
+      // Phần 2 (Khung dưới nổi bật): 1 câu kết luận trực tiếp cho câu hỏi của người xem
+      adviceBox.style.display = "flex";
+      if (reading && reading.spreadType === "love_match" && reading.loveMatch) {
+        document.getElementById("adviceBoxTitle").textContent =
+          `💘 2. Kết Luận Ghép Đôi: ${reading.loveMatch.personA} ❤️ ${reading.loveMatch.personB} (${reading.loveMatch.score}%)`;
+        document.getElementById("adviceText").textContent =
+          `${reading.loveMatch.matchTier} — ${reading.loveMatch.matchAdvice}`;
+      } else {
+        document.getElementById("adviceBoxTitle").textContent =
+          `🎯 2. Kết Luận Trực Tiếp Cho Câu Hỏi Của Bạn`;
+        document.getElementById("adviceText").textContent = sentence2DirectConclusion;
+      }
+
+      Array.from(interpTabs.children).forEach((el, idx) => {
+        el.style.background = idx === index ? "rgba(212, 175, 55, 0.38)" : "rgba(212, 175, 55, 0.1)";
+        el.style.borderColor = idx === index ? "#fbe69b" : "rgba(212, 175, 55, 0.35)";
+      });
+    }
+
+    function renderReadingOnStage(reading, shouldSpeak = true) {
+      if (!reading || !Array.isArray(reading.cards) || reading.cards.length === 0) return;
+
+      triggerWitchSpellCast();
+
+      const cards = reading.cards;
+      const isThreeCards = cards.length === 3;
+      const isLoveMatch = reading.spreadType === "love_match" && reading.loveMatch;
+      const isVipFastPass = Boolean(reading.isVipFastPass);
+
+      if (reading.topic) updateTopicUI(reading.topic);
+
+      const bannerEl = document.getElementById("querentBanner");
+      bannerEl.classList.toggle("vip-gold-neon", isVipFastPass);
+
+      const rawHandle = reading.user?.uniqueId || reading.user?.nickname || "HữuDuyên";
+      const cleanHandle = rawHandle.startsWith("@") ? rawHandle : `@${rawHandle}`;
+      const userDisplay = reading.seekerName
+        ? `${reading.seekerName}${reading.seekerDob ? ` (${reading.seekerDob})` : ""} • ${cleanHandle}`
+        : cleanHandle;
+      document.getElementById("querentUsername").textContent = userDisplay;
+
+      if (isVipFastPass) {
+        document.getElementById("spreadBadge").textContent = "🚨 VIP BẬT ĐÈN — FAST PASS TOP 1";
+      } else if (isLoveMatch) {
+        document.getElementById("spreadBadge").textContent = `💘 Bói Ghép Đôi: ${reading.loveMatch.score}% Hợp Nhau`;
+      } else {
+        document.getElementById("spreadBadge").textContent = isThreeCards
+          ? "👑 Trải 3 Lá Trên Bàn"
+          : "✨ Rút 1 Lá Trên Bàn";
+      }
+
+      document.getElementById("querentQuestion").textContent = `"${reading.question || "Xin thông điệp vũ trụ dẫn lối"}"`;
+
+      cardsStage3D.innerHTML = "";
+      cardsStage3D.className = `cards-stage-3d ${isThreeCards || isLoveMatch ? "three-mode" : "single-mode"}`;
+      interpPanel.classList.remove("visible");
+      interpTabs.innerHTML = "";
+
+      cards.forEach((card, idx) => {
+        // Nếu là Bói Ghép Đôi 2 lá, chèn Vòng Quay Năng Lượng Tình Duyên (Love Radar) vào chính giữa 2 lá bài
+        if (isLoveMatch && idx === 1) {
+          const radarEl = document.createElement("div");
+          radarEl.className = "love-radar-orb";
+          radarEl.innerHTML = `
+            <div class="love-radar-score" id="loveRadarScoreCounter">0%</div>
+            <div class="love-radar-tier">${reading.loveMatch.matchTier}</div>
+            <div class="love-radar-pair">${reading.loveMatch.personA} ❤️ ${reading.loveMatch.personB}</div>
+          `;
+          cardsStage3D.appendChild(radarEl);
+
+          // Hiệu ứng nhảy số % năng lượng tình duyên
+          let curScore = 0;
+          const targetScore = Number(reading.loveMatch.score) || 88;
+          const scoreTimer = setInterval(() => {
+            curScore += 3;
+            if (curScore >= targetScore) {
+              curScore = targetScore;
+              clearInterval(scoreTimer);
+            }
+            const scoreNode = document.getElementById("loveRadarScoreCounter");
+            if (scoreNode) scoreNode.textContent = `${curScore}%`;
+          }, 30);
+        }
+
+        const slot = document.createElement("div");
+        slot.className = "tarot-card-slot";
+
+        const orientationClass = card.isReversed ? "reversed" : "upright";
+        const orientationLabel = card.isReversed ? "Lá Ngược" : "Lá Xuôi";
+
+        slot.innerHTML = `
+          <div class="tarot-card-inner">
+            <div class="card-face card-back">
+              <div class="card-back-frame">
+                <div class="card-back-Mandala">❂</div>
+              </div>
+            </div>
+            <div class="card-face card-front">
+              <div class="card-position-ribbon">${card.positionLabel || `Lá #${idx + 1}`}</div>
+              <div class="card-artwork-box">
+                <div class="card-artwork-svg-wrap ${orientationClass}">
+                  ${createTarotArtworkSVG(card)}
+                </div>
+                <span class="orientation-pill ${orientationClass}">${orientationLabel}</span>
+              </div>
+              <div class="card-title-block">
+                <div class="card-name-title">${card.name}</div>
+                <div class="card-keywords-row">
+                  ${(card.keywords || []).map((kw) => `<span class="kw-chip">${kw}</span>`).join("")}
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+
+        slot.addEventListener("click", () => showCardInterpretation(card, idx, reading));
+        cardsStage3D.appendChild(slot);
+
+        const tabBadge = document.createElement("button");
+        tabBadge.className = "interp-tab-badge";
+        tabBadge.style.cursor = "pointer";
+        const tabPrefix = isThreeCards
+          ? ["💖 Lá 1 (Tình Yêu)", "⚜️ Lá 2 (Công Việc)", "🔮 Lá 3 (Lời Khuyên)"][idx]
+          : `${idx + 1}`;
+        tabBadge.textContent = `${tabPrefix}: ${card.name}`;
+        tabBadge.onclick = () => showCardInterpretation(card, idx, reading);
+        interpTabs.appendChild(tabBadge);
+
+        setTimeout(() => {
+          slot.classList.add("fly-in");
+          soundEngine.playCardFlip(0);
+        }, 100 + idx * 240);
+
+        setTimeout(() => {
+          slot.classList.add("flipped");
+        }, 500 + idx * 280);
+      });
+
+      setTimeout(() => {
+        showCardInterpretation(cards[0], 0, reading);
+        interpPanel.classList.add("visible");
+        if (shouldSpeak) {
+          if (soundEngine.voiceEnabled) {
+            soundEngine.speakReading(reading, () => {
+              socket.emit("reading:finished", { readingId: reading?.readingId });
+            });
+          } else {
+            // Khi tắt giọng đọc, giữ thẻ trên màn hình 10s rồi tự chuyển sang người kế tiếp
+            setTimeout(() => {
+              socket.emit("reading:finished", { readingId: reading?.readingId });
+            }, 10000);
+          }
+        }
+      }, 580 + (cards.length - 1) * 280);
+
+      if (window._spreadCycleTimer) clearInterval(window._spreadCycleTimer);
+      if (isThreeCards || isLoveMatch) {
+        let currentIdx = 0;
+        window._spreadCycleTimer = setInterval(() => {
+          currentIdx = (currentIdx + 1) % cards.length;
+          showCardInterpretation(cards[currentIdx], currentIdx, reading);
+        }, 4500);
+      }
+    }
+
+    function renderQueue(queue = []) {
+      const queueList = document.getElementById("queueList");
+      const queueBadge = document.getElementById("queueCountBadge");
+      queueBadge.textContent = `${queue.length} người chờ`;
+
+      if (!queue.length) {
+        queueList.innerHTML = `
+          <div class="queue-row">
+            <span class="queue-user">✨ Phù Thủy:</span>
+            <span class="queue-q-text">Comment "[Tên] - [Ngày/Tháng/Năm sinh]" hoặc "#tinhyeu" ngay!</span>
+          </div>
+        `;
+        return;
+      }
+
+      queueList.innerHTML = queue.slice(0, 3).map((item, idx) => `
+        <div class="queue-row ${item.isVipFastPass ? "vip-fastpass" : item.isPriority ? "vip" : ""}">
+          <span class="queue-user">
+            ${item.isVipFastPass ? "🚨👑 [TOP 1 VIP MẠ VÀNG]" : item.isPriority ? "👑 [VIP]" : `#${idx + 1}`} ${item.displayLabel || (item.seekerName ? `${item.seekerName} (${item.seekerDob})` : `@${item.uniqueId}`)}:
+          </span>
+          <span class="queue-q-text">${item.question}</span>
+        </div>
+      `).join("");
+    }
+
+    function updateLikeBar(likeProgress = 0, threshold = 50) {
+      const pct = Math.min(Math.round((likeProgress / threshold) * 100), 100);
+      document.getElementById("likeCounterText").textContent =
+        `✨ Thanh tẩy: ${likeProgress} / ${threshold} Tim`;
+      document.getElementById("likeProgressBar").style.width = `${pct}%`;
+    }
+
+    // Cập nhật Thanh Tiến Trình "Năng Lượng Tập Thể" (5.000 Tim hoặc 50 Chia Sẻ)
+    let energyPulseTimer = null;
+    function updateGlobalEnergyUI(energy = {}) {
+      const likes = Number(energy.likes) || 0;
+      const likeTarget = Number(energy.likeTarget) || 5000;
+      const shares = Number(energy.shares) || 0;
+      const shareTarget = Number(energy.shareTarget) || 50;
+      const pct = Math.min(Number(energy.percent) || 0, 100);
+
+      document.getElementById("globalLikesCounter").textContent =
+        `❤️ ${likes.toLocaleString("vi-VN")} / ${likeTarget.toLocaleString("vi-VN")} Tim`;
+      document.getElementById("globalSharesCounter").textContent =
+        `🔄 ${shares} / ${shareTarget} Chia Sẻ`;
+      document.getElementById("globalEnergyPct").textContent = `${pct}%`;
+      document.getElementById("globalEnergyFill").style.width = `${pct}%`;
+
+      if (energy.pulseType && energy.pulseType !== "init" && energy.pulseType !== "reset") {
+        const container = document.getElementById("globalEnergyContainer");
+        container.classList.add("energy-pulse");
+        if (energyPulseTimer) clearTimeout(energyPulseTimer);
+        energyPulseTimer = setTimeout(() => {
+          container.classList.remove("energy-pulse");
+        }, 380);
+      }
+    }
+
+    // Hiệu ứng Nổ Pháo Hoa Sao Băng (Meteor Shower & Starburst Fireworks) trên Canvas 1080x1920
+    function launchMeteorFireworks() {
+      const canvas = document.getElementById("meteorFireworksCanvas");
+      if (!canvas) return;
+      const ctx = canvas.getContext("2d");
+      const W = canvas.width;
+      const H = canvas.height;
+
+      const meteors = [];
+      const sparks = [];
+      const colors = ["#fde047", "#f472b6", "#38bdf8", "#c084fc", "#4ade80", "#ffffff"];
+
+      // Tạo 18 ngôi sao băng xẹt chéo bầu trời
+      for (let i = 0; i < 18; i++) {
+        meteors.push({
+          x: Math.random() * W * 1.2,
+          y: -Math.random() * 600,
+          vx: -6 - Math.random() * 7,
+          vy: 12 + Math.random() * 10,
+          len: 110 + Math.random() * 90,
+          color: colors[i % colors.length],
+          exploded: false,
+          explodeY: 320 + Math.random() * 880
+        });
+      }
+
+      function createBurst(bx, by, baseColor) {
+        for (let i = 0; i < 42; i++) {
+          const angle = (Math.PI * 2 * i) / 42 + (Math.random() - 0.5) * 0.2;
+          const speed = 2.5 + Math.random() * 8.5;
+          sparks.push({
+            x: bx,
+            y: by,
+            vx: Math.cos(angle) * speed,
+            vy: Math.sin(angle) * speed,
+            alpha: 1,
+            decay: 0.014 + Math.random() * 0.015,
+            size: 2.5 + Math.random() * 3.5,
+            color: Math.random() < 0.35 ? "#fde047" : baseColor
+          });
+        }
+      }
+
+      // Tạo sẵn 5 chùm pháo hoa nổ rực rỡ ngay lập tức
+      for (let k = 0; k < 5; k++) {
+        createBurst(200 + Math.random() * 680, 260 + Math.random() * 750, colors[k % colors.length]);
+      }
+
+      let frame = 0;
+      const maxFrames = 260;
+
+      function animate() {
+        frame++;
+        ctx.clearRect(0, 0, W, H);
+
+        // Vẽ sao băng
+        for (const m of meteors) {
+          if (!m.exploded) {
+            m.x += m.vx;
+            m.y += m.vy;
+
+            const grad = ctx.createLinearGradient(m.x, m.y, m.x - m.vx * 8, m.y - m.vy * 8);
+            grad.addColorStop(0, m.color);
+            grad.addColorStop(1, "rgba(255,255,255,0)");
+
+            ctx.save();
+            ctx.strokeStyle = grad;
+            ctx.lineWidth = 4;
+            ctx.lineCap = "round";
+            ctx.beginPath();
+            ctx.moveTo(m.x, m.y);
+            ctx.lineTo(m.x - m.vx * 7, m.y - m.vy * 7);
+            ctx.stroke();
+
+            ctx.fillStyle = "#fff";
+            ctx.beginPath();
+            ctx.arc(m.x, m.y, 4.5, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+
+            if (m.y >= m.explodeY) {
+              m.exploded = true;
+              createBurst(m.x, m.y, m.color);
+            }
+          }
+        }
+
+        // Vẽ các hạt pháo hoa sao băng
+        for (let i = sparks.length - 1; i >= 0; i--) {
+          const s = sparks[i];
+          s.x += s.vx;
+          s.y += s.vy;
+          s.vy += 0.12; // trọng lực nhẹ
+          s.alpha -= s.decay;
+
+          if (s.alpha <= 0) {
+            sparks.splice(i, 1);
+            continue;
+          }
+
+          ctx.save();
+          ctx.globalAlpha = Math.max(s.alpha, 0);
+          ctx.fillStyle = s.color;
+          ctx.shadowColor = s.color;
+          ctx.shadowBlur = 12;
+          ctx.beginPath();
+          ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+        }
+
+        if (frame < maxFrames && (sparks.length > 0 || meteors.some((m) => !m.exploded))) {
+          requestAnimationFrame(animate);
+        } else {
+          ctx.clearRect(0, 0, W, H);
+        }
+      }
+
+      requestAnimationFrame(animate);
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById("cleanseToast");
+      toast.textContent = msg;
+      toast.classList.add("show");
+      setTimeout(() => toast.classList.remove("show"), 3500);
+    }
+
+    function triggerCleanseVisual(payload = {}) {
+      soundEngine.playSingingBowl();
+      triggerWitchSpellCast();
+
+      const wave = document.getElementById("cleanseWave");
+      wave.classList.remove("active");
+      void wave.offsetWidth;
+      wave.classList.add("active");
+
+      showToast(payload.message || "🔔 Chuông Xoay Ngân Vang — Cô Phù Thủy Đã Thanh Tẩy Bộ Bài!");
+    }
+
+    const socket = io();
+
+    socket.on("state:init", (state) => {
+      if (state.studioConfig) applyStudioConfig(state.studioConfig);
+      if (state.topic) updateTopicUI(state.topic);
+      if (state.stats) updateLikeBar(state.stats.likeProgress, state.stats.cleanseThreshold);
+      if (state.energy) updateGlobalEnergyUI(state.energy);
+      if (state.queue) renderQueue(state.queue);
+      if (state.currentReading) {
+        renderReadingOnStage(state.currentReading, false);
+      } else if (window.TAROT_DATA && window.TAROT_DATA.length > 0) {
+        renderReadingOnStage({
+          cards: [{ ...window.TAROT_DATA[2], positionLabel: "Lá Bài Hộ Mệnh Của Cô Phù Thủy", isReversed: false }],
+          user: { uniqueId: "PhuThuyTarot" },
+          question: "Chào mừng bạn đến với Bàn Trải Bài Tarot Của Cô Phù Thủy Huyền Bí!"
+        }, false);
+      }
+    });
+
+    socket.on("studio:config_updated", (cfg) => applyStudioConfig(cfg));
+    socket.on("topic:updated", ({ topic }) => updateTopicUI(topic));
+    socket.on("queue:updated", (queue) => renderQueue(queue));
+    socket.on("tiktok:like", (data) => {
+      updateLikeBar(data.likeProgress, data.threshold);
+      if (data.energy) updateGlobalEnergyUI(data.energy);
+    });
+    socket.on("energy:update", (energy) => updateGlobalEnergyUI(energy));
+    socket.on("tarot:global_unlock", (payload) => {
+      soundEngine.playMeteorFireworksSound();
+      launchMeteorFireworks();
+      showToast(
+        payload.message ||
+          "☄️ NỔ PHÁO HOA SAO BĂNG! Đã mở khóa Tụ Bài Bí Ẩn chung cho toàn phòng Live!"
+      );
+    });
+    socket.on("tarot:cleanse", (payload) => {
+      triggerCleanseVisual(payload);
+      soundEngine.speakVietnameseFemale(
+        "Cảm ơn năng lượng yêu thương của các bạn. Tiếng chuông xoay đã thanh tẩy bộ bài trong lành, sẵn sàng đón nhận câu hỏi tiếp theo."
+      );
+    });
+    socket.on("tarot:draw", (reading) => renderReadingOnStage(reading, true));
+    socket.on("tarot:vip_fastpass", (vip) => {
+      soundEngine.playVipFastPassFanfare();
+      showToast(vip.message || `🚨 VIP BẬT ĐÈN! @${vip.uniqueId} lên thẳng Top 1 Mạ Vàng!`);
+    });
+    socket.on("tts:play", ({ text }) => soundEngine.speakVietnameseFemale(text));
+
+    socket.on("tiktok:member", (m) => {
+      showToast(`🔮 Chào mừng @${m.uniqueId} bước vào phòng bói bài của Cô Phù Thủy!`);
+    });
+
+    socket.on("tiktok:status", (st) => {
+      const dot = document.getElementById("connDot");
+      const txt = document.getElementById("connStatusText");
+      if (st.status === "connected") {
+        dot.classList.add("online");
+        txt.textContent = `Đang Live: @${st.uniqueId}`;
+      } else {
+        dot.classList.remove("online");
+        txt.textContent = st.message || "TikTok Live Studio Ready";
+      }
+    });
+
+    document.getElementById("deckStack").addEventListener("click", () => {
+      soundEngine.ensureContext();
+      socket.emit("mock:draw", { cardCount: 1, uniqueId: "KhachHuuDuyen" });
+    });
+  </script>
+</body>
+</html>

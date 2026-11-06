@@ -1,0 +1,96 @@
+================================================================================
+   🔮 CẨM NANG HƯỚNG DẪN SỬ DỤNG PHẦN MỀM TIKTOK LIVE TAROT OVERLAY
+   Phiên bản: 1-Click Plug & Play (Tự động mở trình duyệt - Chạy ngay không cần cài đặt)
+================================================================================
+
+📌 ĐẶC ĐIỂM NỔI BẬT:
+- Đã tích hợp sẵn bộ máy chạy Portable độc lập bên trong thư mục phần mềm.
+- Máy tính của bạn hoàn toàn KHÔNG CẦN cài đặt Node.js hay phần mềm phụ trợ nào khác.
+- Không yêu cầu kích hoạt bản quyền phức tạp, tải về là dùng vĩnh viễn.
+
+--------------------------------------------------------------------------------
+BƯỚC 1: KHỞI ĐỘNG 1-CLICK
+--------------------------------------------------------------------------------
+1. Tải về và giải nén thư mục phần mềm vào ổ đĩa bất kỳ (Desktop, Ổ D, Ổ E,...).
+2. Nhấp đúp chuột vào file: KhoiDong.bat
+   - Cửa sổ màu đen sẽ hiện lên để chạy Server nội bộ.
+   - Sau đúng 2 giây, trình duyệt web sẽ TỰ ĐỘNG BẬT trang Quản Trị Admin:
+     👉 http://localhost:3000/admin
+3. Lưu ý quan trọng:
+   - Hãy GIỮ NGUYÊN cửa sổ màu đen này mở trong suốt buổi Livestream.
+   - Khi kết thúc buổi Live muốn tắt hoàn toàn: Chỉ cần đóng cửa sổ đen đó lại,
+     hoặc nhấp đúp vào file 'stop.bat'.
+
+--------------------------------------------------------------------------------
+BƯỚC 2: CÀI ĐẶT MÀN HÌNH VÀO OBS STUDIO HOẶC TIKTOK LIVE STUDIO
+--------------------------------------------------------------------------------
+👉 LINK OVERLAY DUY NHẤT: http://localhost:3000/overlay.html
+
+A. CÀI ĐẶT TRÊN OBS STUDIO (Khung dọc 1080x1920):
+   1. Mở OBS Studio, tạo một Scene (Cảnh) dành cho Live dọc.
+   2. Tại bảng Sources (Nguồn) -> Nhấp chuột vào dấu [+] -> Chọn 'Browser' (Trình duyệt).
+   3. Điền các thông số chính xác:
+      - URL: http://localhost:3000/overlay.html
+      - Width (Chiều rộng) : 1080
+      - Height (Chiều cao) : 1920
+      - Tích chọn: "Control audio via OBS" (Để chỉnh âm lượng chuông/nhạc trong mixer OBS).
+      - Tích chọn: "Shutdown source when not visible" và "Refresh browser when scene becomes active".
+   4. Bấm [OK] là bàn trải bài cùng Cô Phù Thủy sẽ hiện lên sắc nét 100%!
+
+B. CÀI ĐẶT TRÊN TIKTOK LIVE STUDIO:
+   - Cách 1 (Khuyên dùng - Nguồn Liên Kết / Link):
+     + Trong TikTok Live Studio, bấm [Thêm Nguồn] -> Chọn [Liên Kết (Link)].
+     + Dán link: http://localhost:3000/overlay.html
+     + Chọn kích thước: 1080 x 1920 (Tỷ lệ 9:16) -> Bấm [Áp Dụng].
+   - Cách 2 (Quay Cửa Sổ / Window Capture):
+     + Trên thanh menu đầu trang Admin, bấm nút: "📱 Mở Cửa Sổ 9:16".
+     + Một cửa sổ dọc độc lập sẽ hiện lên.
+     + Trong TikTok Live Studio, bấm [Thêm Nguồn] -> Chọn [Quay Cửa Sổ] -> Chọn cửa sổ vừa mở.
+
+--------------------------------------------------------------------------------
+BƯỚC 3: KẾT NỐI VÀ MẸO VƯỢT LỖI 403 TIKTOK
+--------------------------------------------------------------------------------
+1. Tại trang Admin, nhập TikTok Username của bạn (ví dụ: @sillydizzy20) rồi bấm [Kết Nối Live].
+2. MẸO VƯỢT LỖI 403 KHI TIKTOK QUÉT BOT:
+   - Nếu kết nối báo lỗi 403 do TikTok hạn chế IP:
+     + Mở trình duyệt web của bạn, đăng nhập vào trang tiktok.com.
+     + Bấm F12 -> vào mục Application (hoặc Storage) -> Cookies -> https://www.tiktok.com.
+     + Tìm dòng tên 'sessionid', sao chép (copy) chuỗi ký tự giá trị của nó.
+     + Dán vào ô "TikTok Session ID" trong mục Cài đặt nâng cao trên trang Admin rồi bấm Kết Nối lại.
+     + Đảm bảo vượt rào và kết nối thành công 100%!
+
+--------------------------------------------------------------------------------
+BƯỚC 4: CÁC TÍNH NĂNG TƯƠNG TÁC TỰ ĐỘNG KHI LIVE
+--------------------------------------------------------------------------------
+1. CÚ PHÁP COMMENT BÓI BÀI THÔNG THƯỜNG:
+   - Người xem comment: [Tên] - [Ngày tháng năm sinh]
+   - Ví dụ:
+     "Minh - 15/08/2000"
+     "Thùy Dung - 20/11/2001 - Tình cảm sắp tới thế nào ạ?"
+     "Hoàng Nam - 1998 - Công việc tháng này có thuận lợi không?"
+   - Hệ thống sẽ tự nhận diện tên, ngày sinh, tự động rút bài và giọng đọc AI nữ x1.5 ấm áp sẽ đọc tên người xem cùng lời giải bài trực tiếp trên live.
+
+2. CÚ PHÁP BÓI GHÉP ĐÔI TÌNH DUYÊN (#tinhyeu):
+   - Người xem comment: #tinhyeu "Tên 1 - Năm sinh" "Tên 2 - Năm sinh"
+   - Ví dụ:
+     #tinhyeu "Minh - 15/08/2000" "Lan - 01/02/2002"
+   - Hệ thống tự động bốc 2 lá bài tình cảm cho 2 người và kích hoạt Vòng Quay Năng Lượng Tình Duyên (Love Radar) nhảy số đo % độ hòa hợp từ 75% đến 99%!
+
+3. ĐẶC QUYỀN ƯU TIÊN KHÁCH LIVE THẬT:
+   - Khi bạn đang bơm các comment ảo (chim mồi) tạo không khí cho phòng live, nếu có KHÁCH LIVE THẬT comment, hệ thống sẽ NGAY LẬP TỨC xếp khách thật lên vị trí số 1 của hàng chờ.
+   - Các lượt đọc diễn ra tuần tự từng người, có 3.5 giây nghỉ ngơi để ngẫm bài, tuyệt đối KHÔNG BAO GIỜ bị chồng tiếng hay nhảy bài dồn dập.
+
+4. THẢ TIM & THANH TẨY NĂNG LƯỢNG BỘ BÀI:
+   - Cứ mỗi 50 lượt thả tim, tiếng Chuông Xoay Tây Tạng (Singing Bowl 432Hz) sẽ tự động ngân vang thanh tẩy bộ bài.
+   - Người xem cũng có thể comment cú pháp #thanh_tay hoặc #thanhtay để chuông xoay kích hoạt ngay.
+
+5. TẶNG QUÀ KÍCH HOẠT ĐẶC QUYỀN VIP:
+   - Quà nhỏ (1 - 9 xu): Kích hoạt bốc 1 lá bài may mắn.
+   - Quà vừa & lớn (10+ xu): Kích hoạt trải 3 lá bài (Tình Yêu - Công Việc - Lời Khuyên).
+   - Quà VIP (50+ xu hoặc Nước hoa / Mũ miện / Vương miện): Kích hoạt hiệu ứng "VIP BẬT ĐÈN" vàng rực rỡ, bay thẳng lên Top 1 Mạ Vàng và bốc bài ưu tiên số 1!
+
+6. ĐẦY THANH NĂNG LƯỢNG TẬP THỂ (5.000 TIM / 50 SHARE):
+   - Kích hoạt Pháo Hoa Sao Băng mở khóa Tụ Bài Bí Ẩn Vũ Trụ chung cho toàn thể khán giả đang xem live.
+
+Chúc bạn có những buổi Livestream Tarot rực rỡ, thu hút hàng nghìn người xem và bùng nổ tương tác! 🌟
+================================================================================

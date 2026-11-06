@@ -1,0 +1,30 @@
+{
+  "name": "interactive-tarot-tiktok-live-overlay",
+  "version": "1.0.0",
+  "description": "Ứng dụng tương tác TikTok Live: Trải Bài Tarot & Thông Điệp Vũ Trụ Online (OBS Overlay & Live Studio)",
+  "main": "server.js",
+  "bin": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "build": "pkg . --output dist/TarotLiveApp.exe"
+  },
+  "pkg": {
+    "scripts": [
+      "public/tarot_data.js"
+    ],
+    "assets": [
+      "public/**/*"
+    ],
+    "targets": [
+      "node18-win-x64"
+    ],
+    "outputPath": "dist"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
+    "socket.io": "^4.7.5",
+    "socket.io-client": "^4.8.4",
+    "tiktok-live-connector": "^2.5.0"
+  }
+}

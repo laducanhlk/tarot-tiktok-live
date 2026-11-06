@@ -1,0 +1,1910 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tarot Live Studio — Bảng Điều Khiển Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg-dark: #0b0616;
+      --bg-panel: #160c2b;
+      --bg-card: #211240;
+      --gold: #d4af37;
+      --gold-light: #fbe69b;
+      --purple-accent: #9333ea;
+      --emerald: #10b981;
+      --rose: #f43f5e;
+      --text-main: #f8f5ff;
+      --text-sub: #b8a6d9;
+      --border-gold: rgba(212, 175, 55, 0.35);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "Be Vietnam Pro", sans-serif;
+      background: radial-gradient(circle at top right, #231044 0%, var(--bg-dark) 65%);
+      color: var(--text-main);
+      min-height: 100vh;
+      padding: 24px;
+    }
+
+    .container {
+      max-width: 1320px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .studio-header {
+      background: linear-gradient(135deg, rgba(28, 14, 54, 0.95), rgba(16, 7, 32, 0.95));
+      border: 1.5px solid var(--border-gold);
+      border-radius: 18px;
+      padding: 18px 24px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
+    }
+
+    .brand-title {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .brand-title h1 {
+      font-size: 21px;
+      color: var(--gold-light);
+    }
+
+    .brand-title p {
+      font-size: 13px;
+      color: var(--text-sub);
+      margin-top: 2px;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .link-btn {
+      text-decoration: none;
+      background: rgba(212, 175, 55, 0.16);
+      color: var(--gold-light);
+      border: 1px solid var(--gold);
+      padding: 10px 16px;
+      border-radius: 12px;
+      font-size: 13.5px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .link-btn:hover {
+      background: var(--gold);
+      color: #120624;
+    }
+
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: 1.12fr 0.88fr;
+      gap: 20px;
+    }
+
+    @media (max-width: 980px) {
+      .dashboard-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .panel {
+      background: var(--bg-panel);
+      border: 1px solid var(--border-gold);
+      border-radius: 18px;
+      padding: 20px;
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .panel-title {
+      font-size: 16.5px;
+      font-weight: 700;
+      color: var(--gold-light);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+      padding-bottom: 10px;
+    }
+
+    .tiktok-conn-box {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .input-field {
+      flex: 1;
+      min-width: 200px;
+      background: #0d061a;
+      border: 1.5px solid rgba(212, 175, 55, 0.4);
+      border-radius: 12px;
+      padding: 11px 15px;
+      color: #fff;
+      font-size: 14.5px;
+      outline: none;
+    }
+
+    .input-field:focus {
+      border-color: var(--gold-light);
+    }
+
+    .btn {
+      border: none;
+      border-radius: 12px;
+      padding: 11px 18px;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: transform 0.15s ease, filter 0.2s ease;
+    }
+
+    .btn:active {
+      transform: scale(0.97);
+    }
+
+    .btn-connect {
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: #fff;
+    }
+
+    .btn-disconnect {
+      background: linear-gradient(135deg, #f43f5e, #e11d48);
+      color: #fff;
+    }
+
+    .status-banner {
+      padding: 10px 14px;
+      border-radius: 12px;
+      font-size: 13.5px;
+      background: rgba(255, 255, 255, 0.05);
+      border-left: 4px solid var(--gold);
+    }
+
+    /* Bộ chọn Chủ Đề & Chế độ Nền */
+    .topic-selector-group {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    .topic-btn, .bg-mode-btn {
+      background: var(--bg-card);
+      border: 1.5px solid rgba(212, 175, 55, 0.35);
+      color: var(--text-main);
+      padding: 12px 10px;
+      border-radius: 12px;
+      font-size: 13.5px;
+      font-weight: 600;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.2s ease;
+    }
+
+    .topic-btn.active, .bg-mode-btn.active {
+      background: linear-gradient(135deg, #b48222, #e8c360);
+      color: #140726;
+      border-color: #fff;
+      font-weight: 700;
+      box-shadow: 0 0 18px rgba(212, 175, 55, 0.45);
+    }
+
+    /* TikTok Live Studio Box */
+    .studio-feature-row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(212, 175, 55, 0.25);
+      padding: 12px 15px;
+      border-radius: 12px;
+    }
+
+    .toggle-switch {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--gold-light);
+    }
+
+    .toggle-switch input {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--gold);
+      cursor: pointer;
+    }
+
+    .mock-buttons-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .btn-mock {
+      padding: 15px 16px;
+      border-radius: 14px;
+      font-size: 14.5px;
+      text-align: left;
+      justify-content: flex-start;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
+    }
+
+    .btn-mock-cleanse { background: linear-gradient(135deg, #0d9488, #115e59); color: #ecfdf5; }
+    .btn-mock-1card { background: linear-gradient(135deg, #7e22ce, #581c87); color: #faf5ff; }
+    .btn-mock-3cards { background: linear-gradient(135deg, #ca8a04, #854d0e); color: #fefce8; border-color: var(--gold-light); }
+    .btn-mock-queue { background: linear-gradient(135deg, #2563eb, #1e40af); color: #eff6ff; }
+
+    .custom-mock-form {
+      background: rgba(0, 0, 0, 0.25);
+      border: 1px dashed rgba(212, 175, 55, 0.35);
+      border-radius: 14px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .custom-mock-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .queue-controls {
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn-next-q {
+      flex: 1;
+      background: linear-gradient(135deg, #d4af37, #f5d372);
+      color: #160729;
+      font-size: 14.5px;
+    }
+
+    .btn-clear-q {
+      background: rgba(244, 63, 94, 0.2);
+      color: #fda4af;
+      border: 1px solid rgba(244, 63, 94, 0.45);
+    }
+
+    .admin-queue-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-height: 260px;
+      overflow-y: auto;
+    }
+
+    .admin-queue-item {
+      background: var(--bg-card);
+      border: 1px solid rgba(212, 175, 55, 0.25);
+      border-radius: 12px;
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .admin-queue-item.vip {
+      border-color: var(--gold-light);
+      background: linear-gradient(90deg, rgba(212, 175, 55, 0.2), rgba(33, 18, 64, 0.95));
+    }
+
+    .reading-preview-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 10px;
+    }
+
+    .mini-card {
+      background: var(--bg-card);
+      border: 1px solid var(--gold);
+      border-radius: 12px;
+      padding: 12px;
+    }
+
+    .mini-card h4 {
+      color: var(--gold-light);
+      font-size: 14.5px;
+      margin-bottom: 5px;
+    }
+
+    .mini-card p {
+      font-size: 12px;
+      color: var(--text-sub);
+      line-height: 1.4;
+      margin-bottom: 4px;
+    }
+
+    /* Bảng kho comment mẫu sẵn */
+    .preset-filter-btn {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(212, 175, 55, 0.3);
+      color: #cbd5e1;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 12.5px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .preset-filter-btn.active {
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: #fff;
+      border-color: #34d399;
+      box-shadow: 0 0 12px rgba(16, 185, 129, 0.45);
+    }
+
+    .preset-item-card {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      padding: 10px 13px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      transition: all 0.18s ease;
+    }
+
+    .preset-item-card:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(212, 175, 55, 0.5);
+      transform: translateX(2px);
+    }
+
+    .preset-badge-single {
+      background: rgba(168, 85, 247, 0.2);
+      color: #d8b4fe;
+      border: 1px solid #c084fc;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 6px;
+      white-space: nowrap;
+    }
+
+    .preset-badge-love {
+      background: rgba(244, 63, 94, 0.2);
+      color: #fda4af;
+      border: 1px solid #fb7185;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 6px;
+      white-space: nowrap;
+    }
+
+    .btn-preset-send {
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: #fff;
+      font-size: 11.5px;
+      font-weight: 700;
+      padding: 6px 11px;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      white-space: nowrap;
+    }
+
+    .btn-preset-send:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+    }
+
+    .btn-preset-fill {
+      background: rgba(255, 255, 255, 0.1);
+      color: #e2e8f0;
+      font-size: 11.5px;
+      font-weight: 600;
+      padding: 6px 11px;
+      border-radius: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      cursor: pointer;
+      transition: all 0.15s ease;
+      white-space: nowrap;
+    }
+
+    .btn-preset-fill:hover {
+      background: rgba(255, 255, 255, 0.2);
+      color: #fff;
+    }
+
+    /* Modal Hướng Dẫn Cài Đặt (OBS & TikTok Live Studio) */
+    .guide-modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(8px);
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .guide-modal-content {
+      background: linear-gradient(165deg, #1e0f3d 0%, #100624 100%);
+      border: 2px solid var(--gold-main);
+      border-radius: 18px;
+      width: 100%;
+      max-width: 820px;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.95), 0 0 35px rgba(212, 175, 55, 0.35);
+      padding: 24px;
+      position: relative;
+    }
+
+    .guide-modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1.5px solid rgba(212, 175, 55, 0.3);
+      padding-bottom: 14px;
+      margin-bottom: 18px;
+    }
+
+    .btn-close-modal {
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      color: #cbd5e1;
+      font-size: 24px;
+      cursor: pointer;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+    .btn-close-modal:hover {
+      background: #ef4444;
+      color: #fff;
+    }
+
+    .guide-tabs-bar {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .guide-tab-btn {
+      padding: 12px 16px;
+      font-size: 13.5px;
+      font-weight: 700;
+      border-radius: 10px;
+      cursor: pointer;
+      border: 1.5px solid rgba(212, 175, 55, 0.35);
+      background: rgba(0, 0, 0, 0.35);
+      color: #cbd5e1;
+      transition: all 0.2s;
+    }
+    .guide-tab-btn.active {
+      background: linear-gradient(135deg, #b48222, #f5d372);
+      color: #160729;
+      border-color: #fef08a;
+      box-shadow: 0 4px 15px rgba(212, 175, 55, 0.35);
+    }
+
+    .guide-step-card {
+      display: flex;
+      gap: 14px;
+      background: rgba(0, 0, 0, 0.25);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 14px 16px;
+      margin-bottom: 12px;
+      align-items: flex-start;
+    }
+
+    .guide-step-num {
+      background: linear-gradient(135deg, #7c3aed, #4f46e5);
+      color: #fff;
+      font-weight: 800;
+      font-size: 12px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      white-space: nowrap;
+      text-transform: uppercase;
+    }
+
+    .guide-step-info {
+      font-size: 13.5px;
+      line-height: 1.55;
+      color: #e2e8f0;
+      flex: 1;
+    }
+
+    .btn-copy-url {
+      background: rgba(212, 175, 55, 0.2);
+      border: 1px solid var(--gold-main);
+      color: var(--gold-bright);
+      padding: 2px 8px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 11.5px;
+      font-weight: 600;
+      margin-left: 6px;
+    }
+
+    .guide-tip-card {
+      background: rgba(16, 185, 129, 0.12);
+      border: 1.5px solid #10b981;
+      border-radius: 12px;
+      padding: 12px 16px;
+      color: #d1fae5;
+      font-size: 13px;
+      line-height: 1.5;
+      margin-top: 14px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- HEADER -->
+    <header class="studio-header">
+      <div class="brand-title">
+        <span style="font-size: 36px;">🧙‍♀️</span>
+        <div>
+          <h1>TAROT TIKTOK LIVE STUDIO — BẢNG ĐIỀU KHIỂN</h1>
+          <p>Hỗ trợ phát trực tiếp trên cả TikTok Live Studio & OBS Studio với nền Cô Phù Thủy Bốc Bài</p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button class="link-btn" id="btnOpenGuideModal" style="background: linear-gradient(135deg, #f59e0b, #d97706); color: #000; font-weight: 800; border: 1.5px solid #fef08a; box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);">
+          📖 Hướng Dẫn Cài Đặt (OBS & TikTok)
+        </button>
+        <button class="link-btn" id="btnPopoutStudio">
+          📱 Mở Cửa Sổ 9:16 (Quay Cửa Sổ TikTok Live Studio)
+        </button>
+        <a href="/overlay.html" target="_blank" class="link-btn">✨ Mở Tab Overlay</a>
+      </div>
+    </header>
+
+    <div class="dashboard-grid">
+      <!-- CỘT TRÁI -->
+      <div style="display: flex; flex-direction: column; gap: 20px;">
+        <!-- 1. Kết nối TikTok Live -->
+        <section class="panel">
+          <div class="panel-title">
+            <span>📡 1. Kết Nối Phiên TikTok Live</span>
+            <span id="likeStatsBadge" style="font-size: 13px; color: var(--gold-light);">Tim tích lũy: 0 (0/50)</span>
+          </div>
+
+          <div class="tiktok-conn-box">
+            <input
+              type="text"
+              id="tiktokUsernameInput"
+              class="input-field"
+              placeholder="Nhập TikTok Username đang Live (ví dụ: @tarot_witch)"
+            />
+            <button class="btn btn-connect" id="btnConnectTikTok">🔗 Kết Nối Live</button>
+            <button class="btn btn-disconnect" id="btnDisconnectTikTok">⏹ Ngắt Kết Nối</button>
+          </div>
+
+          <!-- Tùy chọn xác thực nâng cao nếu bị TikTok chặn IP 403 -->
+          <details style="margin-top: 10px; font-size: 13px; color: var(--text-sub); background: rgba(0,0,0,0.25); border: 1px solid rgba(212,175,55,0.25); border-radius: 8px; padding: 8px 12px;">
+            <summary style="cursor: pointer; color: var(--gold-light); font-weight: 600;">
+              ⚙️ Cài đặt kết nối nâng cao (Mặc định ĐỂ TRỐNG - chỉ dùng khi cần)
+            </summary>
+            <div style="margin-top: 8px; display: flex; flex-direction: column; gap: 8px;">
+              <div style="color: #cbd5e1; font-size: 12px; line-height: 1.45;">
+                💡 <em>Hệ thống đã nâng cấp lên bản v2.5.0 tự động kết nối trực tiếp không cần API Key. Nếu bạn dùng tài khoản EulerStream miễn phí, vui lòng để trống ô bên dưới.</em>
+              </div>
+              <div>
+                <label style="display:block; font-size: 12px; margin-bottom: 3px; color: #fef08a;">
+                  EulerStream API Key (Chỉ áp dụng nếu bạn mua gói Business tại eulerstream.com, còn tài khoản miễn phí hãy ĐỂ TRỐNG):
+                </label>
+                <input
+                  type="text"
+                  id="eulerApiKeyInput"
+                  class="input-field"
+                  style="width: 100%; font-size: 12.5px; padding: 6px 10px;"
+                  placeholder="Để trống nếu không dùng gói Business"
+                />
+              </div>
+              <div>
+                <label style="display:block; font-size: 12px; margin-bottom: 3px; color: #fef08a;">
+                  TikTok Session ID (Tùy chọn - lấy từ Cookie sessionid trên trình duyệt):
+                </label>
+                <input
+                  type="text"
+                  id="tiktokSessionIdInput"
+                  class="input-field"
+                  style="width: 100%; font-size: 12.5px; padding: 6px 10px;"
+                  placeholder="Dán giá trị sessionid (nếu có)"
+                />
+              </div>
+            </div>
+          </details>
+
+          <div class="status-banner" id="connStatusBanner" style="margin-top: 10px;">
+            <span id="connStatusText">Trạng thái: Chế độ Sẵn Sàng / Giả lập (Mock Mode)</span>
+          </div>
+        </section>
+
+        <!-- 2. Tích hợp TikTok Live Studio & Hình Nền Cô Phù Thủy -->
+        <section class="panel">
+          <div class="panel-title">
+            <span>🎬 2. Tính Năng TikTok Live Studio & Hình Nền Cô Phù Thủy</span>
+          </div>
+
+          <!-- Chọn chế độ nền -->
+          <div style="font-size: 13px; color: var(--text-sub);">Chọn chế độ hiển thị nền trên TikTok Live Studio:</div>
+          <div class="topic-selector-group">
+            <button class="bg-mode-btn active" data-bgmode="witch">🧙‍♀️ Cô Phù Thủy Bốc Bài</button>
+            <button class="bg-mode-btn" data-bgmode="chroma">🟩 Phông Xanh (Chroma Key)</button>
+            <button class="bg-mode-btn" data-bgmode="transparent">🔲 Nền Trong Suốt</button>
+          </div>
+
+          <!-- Tùy chọn tự động hóa khi Live -->
+          <div class="studio-feature-row">
+            <label class="toggle-switch">
+              <input type="checkbox" id="chkVoiceTTS" checked />
+              <span>🔊 Giọng Nữ Dịu Dàng (Tốc độ x1.5)</span>
+            </label>
+
+            <button class="btn" id="btnTestVoice" style="background: linear-gradient(135deg, #ec4899, #be185d); color: #fff; padding: 8px 14px; font-size: 13px;">
+              🎙️ Nghe Thử Giọng Nữ 1.5x
+            </button>
+
+            <label class="toggle-switch">
+              <input type="checkbox" id="chkAutoQueue" />
+              <span>⚡ Tự động bốc bài Hàng chờ (Auto-Live 18s/lượt)</span>
+            </label>
+          </div>
+
+          <!-- Bộ Chọn 3 Bài Nhạc Nền Tarot Du Dương, Nhẹ Nhàng -->
+          <div style="margin-top: 10px; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(212, 175, 55, 0.28); border-radius: 11px; padding: 10px 12px;">
+            <div style="font-size: 13px; font-weight: 700; color: var(--gold-light); margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center;">
+              <span>🎵 Nhạc Nền Bói Tarot Du Dương (Tự giảm âm khi Giọng Nữ đọc bài):</span>
+              <span id="bgmStatusText" style="font-size: 12px; color: #34d399;">Đang phát: Bài 1</span>
+            </div>
+            <div class="bg-mode-selector" id="bgmSelectorGroup" style="grid-template-columns: repeat(4, 1fr);">
+              <button class="bg-mode-btn bgm-track-btn active" data-bgm="1">🌙 Bài 1: Đêm Trăng Thạch Anh (Đàn Hạc 432Hz)</button>
+              <button class="bg-mode-btn bgm-track-btn" data-bgm="2">🍃 Bài 2: Suối Nguồn Chữa Lành (Piano 528Hz)</button>
+              <button class="bg-mode-btn bgm-track-btn" data-bgm="3">✨ Bài 3: Vườn Địa Đàng (Music Box)</button>
+              <button class="bg-mode-btn bgm-track-btn" data-bgm="0">🔇 Tắt Nhạc Nền</button>
+            </div>
+          </div>
+
+          <!-- Copy Link cho TikTok Live Studio -->
+          <div class="tiktok-conn-box">
+            <input
+              type="text"
+              id="studioUrlInput"
+              class="input-field"
+              readonly
+              value="http://localhost:3000/overlay.html"
+            />
+            <button class="btn btn-connect" id="btnCopyUrl">📋 Copy Link Dán Vào TikTok Live Studio</button>
+          </div>
+        </section>
+
+        <!-- 3. Bộ chọn đổi chủ đề phiên Live -->
+        <section class="panel">
+          <div class="panel-title">
+            <span>🌙 3. Bộ Chọn Chủ Đề Phiên Live</span>
+            <span id="currentTopicBadge" style="font-size: 13px; color: var(--gold-light);">Đang chọn: Tổng Quan Tuần Mới</span>
+          </div>
+
+          <div class="topic-selector-group" id="topicGroup">
+            <button class="topic-btn" data-topic="Tình Duyên">💖 Tình Duyên</button>
+            <button class="topic-btn" data-topic="Sự Nghiệp">⚜️ Sự Nghiệp</button>
+            <button class="topic-btn active" data-topic="Tổng Quan Tuần Mới">🌟 Tổng Quan Tuần Mới</button>
+          </div>
+        </section>
+
+        <!-- 4. Bảng nút bấm Test Giả Lập -->
+        <section class="panel">
+          <div class="panel-title">
+            <span>⚡ 4. Bảng Nút Bấm Test Giả Lập (Không Cần Đang Live)</span>
+          </div>
+
+          <div class="mock-buttons-grid">
+            <button class="btn btn-mock btn-mock-cleanse" id="btnTestCleanse">
+              🔔 Test Thanh Tẩy (Chuông xoay)
+            </button>
+            <button class="btn btn-mock btn-mock-1card" id="btnTest1Card">
+              🌹 Test Bốc 1 Lá (Quà nhỏ 1-9 xu)
+            </button>
+            <button class="btn btn-mock btn-mock-3cards" id="btnTest3Cards">
+              👑 Test Trải 3 Lá (Quà lớn 10+ xu)
+            </button>
+            <button class="btn btn-mock btn-mock-queue" id="btnTestAddQueue">
+              💬 Test Thêm câu hỏi vào hàng chờ
+            </button>
+            <button class="btn btn-mock" id="btnTestLoveMatch" style="background: linear-gradient(135deg, #db2777, #9d174d); color: #fdf2f8;">
+              💘 Test Bói Ghép Đôi (#tinhyeu "Minh - 15/08/2000" "Lan - 01/02/2002")
+            </button>
+            <button class="btn btn-mock" id="btnTestVipFastPass" style="background: linear-gradient(135deg, #eab308, #a16207); color: #1c1917; border: 2px solid #fef08a; font-weight: 800;">
+              🚨 Test VIP BẬT ĐÈN (Fast-Pass 50+ xu Lên Top 1)
+            </button>
+            <button class="btn btn-mock" id="btnTestEnergyBoost" style="background: linear-gradient(135deg, #0284c7, #1e40af); color: #e0f2fe; border: 1px solid #38bdf8;">
+              💓 Cộng Năng Lượng Tập Thể (+500 Tim & +5 Share)
+            </button>
+            <button class="btn btn-mock" id="btnTestEnergyUnlock" style="background: linear-gradient(135deg, #7c3aed, #db2777, #eab308); color: #fff; border: 2px solid #fde047; font-weight: 800;">
+              ☄️ Test Đầy Năng Lượng (5.000 Tim / 50 Share — Nổ Sao Băng & Mở Tụ Bài Bí Ẩn)
+            </button>
+            <button
+              class="btn btn-mock"
+              id="btnTogglePresetComments"
+              style="grid-column: 1 / -1; background: linear-gradient(135deg, #059669, #0d9488); color: #fff; font-weight: 800; font-size: 14px; padding: 13px 18px; border: 1.5px solid #34d399; box-shadow: 0 4px 18px rgba(16, 185, 129, 0.35); display: flex; align-items: center; justify-content: center; gap: 10px;"
+            >
+              <span>📋 Mở Bảng 32+ Comment Mẫu Sẵn Theo Cú Pháp (Tên - Ngày sinh & #tinhyeu)</span>
+              <span id="presetToggleArrow" style="font-size: 13px; transition: transform 0.25s ease;">▼</span>
+            </button>
+          </div>
+
+          <!-- KHUNG KHO 32+ BÌNH LUẬN MẪU SẴN THEO CÚ PHÁP -->
+          <div id="presetCommentsPanel" style="display: none; margin-top: 14px; background: rgba(18, 9, 36, 0.95); border: 1.5px solid rgba(52, 211, 153, 0.45); border-radius: 14px; padding: 14px; box-shadow: 0 8px 32px rgba(0,0,0,0.45);">
+            <!-- Thanh điều khiển kho comment -->
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px;">
+              <div style="display: flex; gap: 8px; flex-wrap: wrap;" id="presetFilterGroup">
+                <button class="preset-filter-btn active" data-filter="all">Tất cả (32)</button>
+                <button class="preset-filter-btn" data-filter="single">🌟 Bói Đơn (20)</button>
+                <button class="preset-filter-btn" data-filter="love">💘 Ghép Đôi #tinhyeu (12)</button>
+              </div>
+
+              <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                <button class="btn" id="btnPump5Queue" style="background: linear-gradient(135deg, #f59e0b, #d97706); color: #1c1917; font-weight: 800; font-size: 12.5px; padding: 7px 13px; border: 1px solid #fde68a;">
+                  ⚡ Bơm 5 Khách Chim Mồi
+                </button>
+                <button class="btn" id="btnTestRealViewerComment" style="background: linear-gradient(135deg, #10b981, #059669); color: #fff; font-weight: 800; font-size: 12.5px; padding: 7px 13px; border: 1.5px solid #6ee7b7; box-shadow: 0 0 12px rgba(16,185,129,0.35);">
+                  🔴 Test Khách Thật (Ưu Tiên Lên Đầu)
+                </button>
+                <button class="btn" id="btnSendRandomPreset" style="background: linear-gradient(135deg, #8b5cf6, #6d28d9); color: #fff; font-weight: 700; font-size: 12.5px; padding: 7px 13px; border: 1px solid #c4b5fd;">
+                  🎲 Gửi 1 Comment Ngẫu Nhiên
+                </button>
+              </div>
+            </div>
+
+            <!-- Ô tìm kiếm nhanh comment -->
+            <div style="margin-bottom: 10px;">
+              <input
+                type="text"
+                id="searchPresetInput"
+                class="input-field"
+                placeholder="🔍 Tìm nhanh theo tên, năm sinh (VD: Minh, 2000, tinhyeu, công việc)..."
+                style="width: 100%; font-size: 13px; padding: 8px 12px; background: rgba(0,0,0,0.35);"
+              />
+            </div>
+
+            <!-- Toast thông báo nhỏ khi vừa gửi -->
+            <div id="presetToastNotice" style="display: none; background: #059669; color: #fff; font-size: 12.5px; font-weight: 700; padding: 7px 12px; border-radius: 8px; margin-bottom: 10px; text-align: center;"></div>
+
+            <!-- Danh sách comment cuộn mượt -->
+            <div id="presetCommentsList" style="display: flex; flex-direction: column; gap: 8px; max-height: 380px; overflow-y: auto; padding-right: 4px;">
+              <!-- Sẽ render động bằng JS -->
+            </div>
+          </div>
+
+          <div class="custom-mock-form">
+            <div style="font-size: 13px; color: var(--gold-light); font-weight: 600;">
+              ✍️ Tùy chỉnh bình luận người xem (Cú pháp: <code>Tên - Ngày sinh</code> hoặc <code>#tinhyeu "Tên 1 - NS" "Tên 2 - NS"</code>):
+            </div>
+            <div class="custom-mock-row">
+              <input
+                type="text"
+                id="mockUserInput"
+                class="input-field"
+                style="flex: 0.35;"
+                placeholder="@username (VD: ngoc_anh99)"
+              />
+              <input
+                type="text"
+                id="mockQuestionInput"
+                class="input-field"
+                style="flex: 0.65;"
+                placeholder='VD: Minh - 15/08/2000 hoặc #tinhyeu "Minh - 15/08/2000" "Lan - 01/02/2002"'
+              />
+            </div>
+            <div style="display: flex; gap: 8px; margin-top: 6px;">
+              <button
+                class="btn"
+                id="btnSendCustomMock"
+                style="flex: 1; background: linear-gradient(135deg, #64748b, #475569); color: #fff; font-weight: 700; padding: 11px 12px; border: 1px solid #94a3b8;"
+              >
+                🤖 Gửi Chim Mồi (Xếp Sau)
+              </button>
+              <button
+                class="btn"
+                id="btnSendCustomReal"
+                style="flex: 1.3; background: linear-gradient(135deg, #10b981, #059669); color: #fff; font-weight: 800; padding: 11px 12px; border: 1.5px solid #34d399; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);"
+              >
+                🔴 Gửi Khách Thật (Ưu Tiên Lên Đầu)
+              </button>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- CỘT PHẢI -->
+      <div style="display: flex; flex-direction: column; gap: 20px;">
+        <!-- 5. Quản lý Hàng Chờ Câu Hỏi -->
+        <section class="panel">
+          <div class="panel-title">
+            <span>📜 5. Hàng Chờ Câu Hỏi (<span id="queueCount">0</span>)</span>
+          </div>
+
+          <div class="queue-controls">
+            <button class="btn btn-next-q" id="btnNextQueue">
+              🔮 Gọi Câu Hỏi Tiếp Theo & Phù Thủy Bốc Bài
+            </button>
+            <button class="btn btn-clear-q" id="btnClearQueue">🗑️ Xóa Hàng Chờ</button>
+          </div>
+
+          <div class="admin-queue-list" id="adminQueueList">
+            <div style="color: var(--text-sub); font-size: 14px; text-align: center; padding: 20px;">
+              Chưa có câu hỏi nào trong hàng chờ. Hãy bấm "Test Thêm câu hỏi vào hàng chờ"!
+            </div>
+          </div>
+        </section>
+
+        <!-- 5.1. Nhật Ký Bình Luận TikTok Live Trực Tiếp -->
+        <section class="panel">
+          <div class="panel-title">
+            <span>💬 Nhật Ký Bình Luận Trực Tiếp Từ TikTok</span>
+            <span id="liveChatCountBadge" style="font-size: 12px; background: rgba(59, 130, 246, 0.2); color: #93c5fd; padding: 2px 8px; border-radius: 999px; border: 1px solid #3b82f6;">0 bình luận</span>
+          </div>
+          <div id="adminLiveChatFeed" style="max-height: 220px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; padding: 8px; background: rgba(0,0,0,0.35); border-radius: 8px; border: 1px solid rgba(255,255,255,0.08);">
+            <div style="color: var(--text-sub); font-size: 13px; text-align: center; padding: 14px;">
+              Chưa có bình luận mới. Khi người xem comment trên TikTok Live, các tin nhắn sẽ xuất hiện tại đây ngay lập tức!
+            </div>
+          </div>
+        </section>
+
+        <!-- 6. Xem trước lá bài vừa bốc -->
+        <section class="panel">
+          <div class="panel-title">
+            <span>🃏 6. Lá Bài Đang Hiển Thị Trên Màn Hình Live</span>
+            <span id="readingViewerName" style="font-size: 13px; color: var(--gold-light);">—</span>
+          </div>
+
+          <div id="readingQuestionPreview" style="font-size: 14px; color: var(--text-sub); font-style: italic;">
+            Chưa có lượt trải bài nào.
+          </div>
+
+          <div class="reading-preview-cards" id="readingPreviewCards"></div>
+        </section>
+
+        <!-- 7. Hướng dẫn nhanh TikTok Live Studio -->
+        <section class="panel" style="font-size: 13.5px; line-height: 1.55; color: var(--text-sub);">
+          <div class="panel-title">
+            <span>💡 Cách Đưa Lên TikTok Live Studio Nhanh Nhất</span>
+          </div>
+          <p>
+            <strong>Cách 1 (Khuyên dùng - Nguồn Liên Kết / Link):</strong> Trong TikTok Live Studio, bấm <strong>Thêm Nguồn (Add Source)</strong> &rarr; chọn <strong>Liên kết (Link)</strong> &rarr; Dán <code>http://localhost:3000/overlay.html</code>, chỉnh độ phân giải <code>1080x1920</code>.
+          </p>
+          <p>
+            <strong>Cách 2 (Quay Cửa Sổ / Window Capture):</strong> Bấm nút <strong>"📱 Mở Cửa Sổ 9:16"</strong> ở góc trên trang này &rarr; Trong TikTok Live Studio chọn <strong>Quay Cửa Sổ (Window Capture)</strong> và chọn cửa sổ vừa mở.
+          </p>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL POPUP HƯỚNG DẪN CÀI ĐẶT OBS & TIKTOK LIVE STUDIO -->
+  <div id="guideModal" class="guide-modal-backdrop" style="display: none;">
+    <div class="guide-modal-content">
+      <div class="guide-modal-header">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span style="font-size: 28px;">📖</span>
+          <div>
+            <h2 style="font-size: 18px; margin: 0; color: var(--gold-bright);">HƯỚNG DẪN CÀI ĐẶT OVERLAY VÀO OBS & TIKTOK LIVE STUDIO</h2>
+            <div style="font-size: 12px; color: var(--text-sub); margin-top: 2px;">Chuẩn khung hình dọc 9:16 (1080x1920) dành riêng cho Livestream Tarot</div>
+          </div>
+        </div>
+        <button id="btnCloseGuideModal" class="btn-close-modal">&times;</button>
+      </div>
+
+      <!-- 2 TAB ĐIỀU HƯỚNG TRỰC QUAN -->
+      <div class="guide-tabs-bar">
+        <button class="guide-tab-btn active" id="tabBtnObs" data-tab="obs">
+          🎥 1. Cài Đặt Vào OBS Studio (Chuẩn 1080x1920)
+        </button>
+        <button class="guide-tab-btn" id="tabBtnStudio" data-tab="studio">
+          📱 2. Cài Đặt Vào TikTok Live Studio (Nguồn Link / Cửa Sổ)
+        </button>
+      </div>
+
+      <div class="guide-tab-body">
+        <!-- NỘI DUNG TAB 1: OBS STUDIO -->
+        <div id="guideTabObs" class="guide-tab-pane">
+          <div class="guide-step-card">
+            <div class="guide-step-num">Bước 1</div>
+            <div class="guide-step-info">
+              Mở <strong>OBS Studio</strong>. Đảm bảo Canvas màn hình đang đặt ở độ phân giải dọc <strong>1080x1920</strong> (Vào <em>Settings &rarr; Video &rarr; Base Canvas: 1080x1920</em>).
+            </div>
+          </div>
+
+          <div class="guide-step-card">
+            <div class="guide-step-num">Bước 2</div>
+            <div class="guide-step-info">
+              Tại ô <strong>Sources (Nguồn)</strong> &rarr; Bấm dấu <strong>+</strong> &rarr; Chọn <strong>Browser (Trình duyệt)</strong> &rarr; Đặt tên nguồn: <code>Tarot Live 9:16</code>.
+            </div>
+          </div>
+
+          <div class="guide-step-card">
+            <div class="guide-step-num">Bước 3</div>
+            <div class="guide-step-info">
+              Điền các thông số chính xác:
+              <ul style="margin: 8px 0 0 16px; padding: 0;">
+                <li style="margin-bottom: 6px;"><strong>URL:</strong> <code style="color: #fde047; font-size: 13.5px;">http://localhost:3000/overlay.html</code> <button class="btn-copy-url" onclick="navigator.clipboard.writeText('http://localhost:3000/overlay.html'); alert('Đã sao chép link Overlay!');">📋 Sao chép</button></li>
+                <li style="margin-bottom: 4px;"><strong>Width (Chiều rộng):</strong> <code>1080</code></li>
+                <li style="margin-bottom: 4px;"><strong>Height (Chiều cao):</strong> <code>1920</code></li>
+                <li style="margin-bottom: 4px;">Tích chọn: <strong>"Control audio via OBS" (Điều khiển âm thanh qua OBS)</strong>.</li>
+                <li>Tích chọn: <strong>"Shutdown source when not visible"</strong> & <strong>"Refresh browser when scene becomes active"</strong>.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="guide-step-card">
+            <div class="guide-step-num">Bước 4</div>
+            <div class="guide-step-info">
+              Bấm <strong>OK</strong>. Bàn trải bài Tarot cùng hiệu ứng lật bài 3D và Cô Phù Thủy sẽ hiển thị sắc nét 100% trên màn hình OBS!
+            </div>
+          </div>
+        </div>
+
+        <!-- NỘI DUNG TAB 2: TIKTOK LIVE STUDIO -->
+        <div id="guideTabStudio" class="guide-tab-pane" style="display: none;">
+          <div class="guide-step-card">
+            <div class="guide-step-num">Cách 1 (Khuyên dùng)</div>
+            <div class="guide-step-info">
+              <strong>Thêm bằng Nguồn Liên Kết (Link Source) - Nhanh gọn & sắc nét nhất:</strong>
+              <ul style="margin: 8px 0 0 16px; padding: 0;">
+                <li style="margin-bottom: 6px;">Trong TikTok Live Studio, bấm <strong>Thêm Nguồn (Add Source)</strong> &rarr; Chọn <strong>Liên Kết (Link)</strong>.</li>
+                <li style="margin-bottom: 6px;">Dán URL: <code style="color: #fde047; font-size: 13.5px;">http://localhost:3000/overlay.html</code> <button class="btn-copy-url" onclick="navigator.clipboard.writeText('http://localhost:3000/overlay.html'); alert('Đã sao chép link Overlay!');">📋 Sao chép</button></li>
+                <li style="margin-bottom: 4px;">Chọn kích thước: <strong>1080 x 1920</strong> (Tỷ lệ dọc 9:16).</li>
+                <li>Bấm <strong>Áp Dụng</strong> là hoàn tất!</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="guide-step-card">
+            <div class="guide-step-num">Cách 2 (Dự phòng)</div>
+            <div class="guide-step-info">
+              <strong>Thêm bằng Quay Cửa Sổ (Window Capture) - Dành cho bản TikTok Studio cũ:</strong>
+              <ul style="margin: 8px 0 0 16px; padding: 0;">
+                <li style="margin-bottom: 6px;">Trên thanh menu đầu trang Admin, bấm nút <strong>"📱 Mở Cửa Sổ 9:16"</strong>.</li>
+                <li style="margin-bottom: 6px;">Một cửa sổ riêng biệt chuẩn tỷ lệ 9:16 sẽ xuất hiện.</li>
+                <li>Trong TikTok Live Studio, bấm <strong>Thêm Nguồn</strong> &rarr; Chọn <strong>Quay Cửa Sổ (Window Capture)</strong> &rarr; Chọn cửa sổ <code>Tarot Overlay 9:16</code>.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="guide-tip-card">
+            💡 <strong>Mẹo vượt rào chống lỗi 403 TikTok:</strong> Nếu kết nối báo lỗi 403, bạn chỉ cần mở trình duyệt web đăng nhập tài khoản TikTok của mình, copy Cookie <code>sessionid</code> và dán vào ô <em>"TikTok Session ID"</em> trong mục Cài đặt nâng cao của Admin là kết nối thành công 100%!
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const socket = io();
+
+    const SAMPLE_QUESTIONS = [
+      { uniqueId: "linh_chi_2k2", nickname: "Linh Chi 🌸", comment: "Linh Chi - 15/08/2002 - Tháng này người ấy có chủ động nhắn tin không ạ?" },
+      { uniqueId: "minh_tuan_dev", nickname: "Minh Tuấn 🚀", comment: "Minh Tuấn - 02/11/1998 - Chuyển việc sang công ty mới có thuận lợi không?" },
+      { uniqueId: "ha_vy_mystic", nickname: "Hà Vy ✨", comment: "Hà Vy - 24/05/2003" },
+      { uniqueId: "bao_ngoc_98", nickname: "Bảo Ngọc 🌙", comment: "Bảo Ngọc - 18/09/2000 - Tình cảm sắp tới thế nào ạ?" },
+      { uniqueId: "khanh_huyen_tarot", nickname: "Khánh Huyền 💫", comment: "Khánh Huyền - 2001" }
+    ];
+    let sampleIndex = 0;
+
+    function isLoveMatchQuery(text) {
+      if (!text) return false;
+      const clean = text.trim();
+      return (
+        /(?:#tinhyeu|#tìnhyêu|#ghepdoi|#ghépđôi|tinhyeu|ghepdoi)/i.test(clean) ||
+        /^["“'\[\(]([^"”'\]\)]+)["”'\]\)]\s*[\s,vàvớiva\-+&]*\s*["“'\[\(]([^"”'\]\)]+)["”'\]\)]?$/i.test(clean) ||
+        /^(nam\s*\d{2,4}|\bnữ\s*\d{2,4}|\bnu\s*\d{2,4})\s*[-,&+vàoớiva]*\s*(nữ\s*\d{2,4}|nu\s*\d{2,4}|nam\s*\d{2,4})$/i.test(clean)
+      );
+    }
+
+    function getCustomOrRandomMock(defaultUser, defaultQuestion) {
+      const userVal = document.getElementById("mockUserInput").value.trim().replace(/^@/, "");
+      const qVal = document.getElementById("mockQuestionInput").value.trim();
+      const sample = SAMPLE_QUESTIONS[sampleIndex % SAMPLE_QUESTIONS.length];
+      sampleIndex += 1;
+
+      let formattedComment = sample.comment;
+      if (qVal) {
+        formattedComment = qVal;
+      }
+
+      return {
+        uniqueId: userVal || defaultUser || sample.uniqueId,
+        nickname: userVal || defaultUser || sample.nickname,
+        question: qVal || defaultQuestion || sample.comment,
+        comment: formattedComment
+      };
+    }
+
+    // Mở cửa sổ 9:16 độc lập cho TikTok Live Studio Window Capture
+    document.getElementById("btnPopoutStudio").addEventListener("click", () => {
+      window.open(
+        "/overlay.html",
+        "TarotTikTokLiveStudio",
+        "width=540,height=960,menubar=no,toolbar=no,location=no,status=no,resizable=yes"
+      );
+    });
+
+    // Modal Popup Hướng Dẫn Cài Đặt OBS & TikTok Live Studio
+    const guideModal = document.getElementById("guideModal");
+    const btnOpenGuideModal = document.getElementById("btnOpenGuideModal");
+    const btnCloseGuideModal = document.getElementById("btnCloseGuideModal");
+    const tabBtnObs = document.getElementById("tabBtnObs");
+    const tabBtnStudio = document.getElementById("tabBtnStudio");
+    const guideTabObs = document.getElementById("guideTabObs");
+    const guideTabStudio = document.getElementById("guideTabStudio");
+
+    if (btnOpenGuideModal) {
+      btnOpenGuideModal.addEventListener("click", () => {
+        guideModal.style.display = "flex";
+      });
+    }
+
+    if (btnCloseGuideModal) {
+      btnCloseGuideModal.addEventListener("click", () => {
+        guideModal.style.display = "none";
+      });
+    }
+
+    guideModal.addEventListener("click", (e) => {
+      if (e.target === guideModal) {
+        guideModal.style.display = "none";
+      }
+    });
+
+    tabBtnObs.addEventListener("click", () => {
+      tabBtnObs.classList.add("active");
+      tabBtnStudio.classList.remove("active");
+      guideTabObs.style.display = "block";
+      guideTabStudio.style.display = "none";
+    });
+
+    tabBtnStudio.addEventListener("click", () => {
+      tabBtnStudio.classList.add("active");
+      tabBtnObs.classList.remove("active");
+      guideTabStudio.style.display = "block";
+      guideTabObs.style.display = "none";
+    });
+
+    // Copy Link
+    document.getElementById("btnCopyUrl").addEventListener("click", () => {
+      const input = document.getElementById("studioUrlInput");
+      navigator.clipboard.writeText(input.value);
+      const btn = document.getElementById("btnCopyUrl");
+      const oldText = btn.textContent;
+      btn.textContent = "✅ Đã Copy Link!";
+      setTimeout(() => (btn.textContent = oldText), 2000);
+    });
+
+    // 1. Kết nối TikTok Live
+    const savedEulerKey = localStorage.getItem("tarot_euler_api_key") || "";
+    const savedSessionId = localStorage.getItem("tarot_tiktok_session_id") || "";
+    if (savedEulerKey && !savedEulerKey.startsWith("euler_")) {
+      document.getElementById("eulerApiKeyInput").value = savedEulerKey;
+    } else {
+      localStorage.removeItem("tarot_euler_api_key");
+      document.getElementById("eulerApiKeyInput").value = "";
+    }
+    if (savedSessionId) document.getElementById("tiktokSessionIdInput").value = savedSessionId;
+
+    document.getElementById("btnConnectTikTok").addEventListener("click", () => {
+      const rawUser = document.getElementById("tiktokUsernameInput").value.trim();
+      const uniqueId = rawUser.replace(/^@/, "");
+      const signApiKey = document.getElementById("eulerApiKeyInput").value.trim();
+      const sessionId = document.getElementById("tiktokSessionIdInput").value.trim();
+
+      if (!uniqueId) {
+        alert("Vui lòng nhập TikTok Username trước khi kết nối!");
+        return;
+      }
+
+      if (signApiKey) {
+        localStorage.setItem("tarot_euler_api_key", signApiKey);
+      } else {
+        localStorage.removeItem("tarot_euler_api_key");
+      }
+      if (sessionId) {
+        localStorage.setItem("tarot_tiktok_session_id", sessionId);
+      } else {
+        localStorage.removeItem("tarot_tiktok_session_id");
+      }
+
+      document.getElementById("connStatusText").textContent = `⏳ Đang kết nối trực tiếp tới TikTok Live @${uniqueId}...`;
+      socket.emit("tiktok:connect", { uniqueId, signApiKey, sessionId });
+    });
+
+    document.getElementById("btnDisconnectTikTok").addEventListener("click", () => {
+      socket.emit("tiktok:disconnect");
+    });
+
+    // 2. Cấu hình TikTok Live Studio (Chế độ nền, Giọng đọc AI, Auto-Queue)
+    const bgModeBtns = document.querySelectorAll(".bg-mode-btn");
+    bgModeBtns.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const bgMode = btn.getAttribute("data-bgmode");
+        socket.emit("studio:config", { bgMode });
+      });
+    });
+
+    document.getElementById("chkVoiceTTS").addEventListener("change", (e) => {
+      socket.emit("studio:config", { voiceTTS: e.target.checked });
+    });
+
+    document.getElementById("chkAutoQueue").addEventListener("change", (e) => {
+      socket.emit("studio:config", { autoDrawQueue: e.target.checked });
+    });
+
+    // Bộ phát giọng Nữ Tiếng Việt dịu dàng, đằm thắm tốc độ x1.5 ngay trên Admin khi test
+    let adminAudioCtx = null;
+    let adminActiveAudio = null;
+
+    async function playWarmFemaleVietnameseAdmin(rawText) {
+      if (!document.getElementById("chkVoiceTTS").checked) return;
+      const cleanText = String(rawText || "")
+        .replace(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]/gu, "")
+        .replace(/[@#*~_]/g, "")
+        .replace(/\s+/g, " ")
+        .trim();
+      if (!cleanText) return;
+
+      try {
+        if (!adminAudioCtx) {
+          const AudioCtx = window.AudioContext || window.webkitAudioContext;
+          adminAudioCtx = new AudioCtx();
+        }
+        if (adminAudioCtx.state === "suspended") await adminAudioCtx.resume();
+        if (adminActiveAudio) {
+          adminActiveAudio.pause();
+          adminActiveAudio.src = "";
+          adminActiveAudio = null;
+        }
+
+        const res = await fetch(`/api/tts?text=${encodeURIComponent(cleanText)}`);
+        if (!res.ok) return;
+        const blob = await res.blob();
+        const blobUrl = URL.createObjectURL(blob);
+
+        const audio = new Audio(blobUrl);
+        audio.preservesPitch = true;
+        audio.mozPreservesPitch = true;
+        audio.webkitPreservesPitch = true;
+        audio.playbackRate = 1.5; // Nhanh x1.5 lần nhưng vẫn giữ tông giọng nữ trầm ấm
+
+        const mediaSource = adminAudioCtx.createMediaElementSource(audio);
+
+        const warmFilter = adminAudioCtx.createBiquadFilter();
+        warmFilter.type = "lowshelf";
+        warmFilter.frequency.value = 240;
+        warmFilter.gain.value = 4.2;
+
+        const softFilter = adminAudioCtx.createBiquadFilter();
+        softFilter.type = "highshelf";
+        softFilter.frequency.value = 4000;
+        softFilter.gain.value = -3.0;
+
+        mediaSource.connect(warmFilter);
+        warmFilter.connect(softFilter);
+        softFilter.connect(adminAudioCtx.destination);
+
+        audio.onended = () => URL.revokeObjectURL(blobUrl);
+        adminActiveAudio = audio;
+        await audio.play();
+      } catch (_) {}
+    }
+
+    document.getElementById("btnTestVoice").addEventListener("click", () => {
+      const sampleGreeting =
+        "Xin chào các tâm hồn hữu duyên. Chào mừng bạn đến với phòng trải bài Tarot của mình. Hãy thả tim thanh tẩy bộ bài và gửi câu hỏi để mình rút bài giải mã thông điệp tình duyên, sự nghiệp dành riêng cho bạn nhé.";
+      playWarmFemaleVietnameseAdmin(sampleGreeting);
+      socket.emit("tts:speak", { text: sampleGreeting });
+    });
+
+    // Bộ phát thử 3 bài nhạc nền Tarot du dương ngay trên trang Admin
+    let adminBgmTimer = null;
+    let adminBgmStep = 0;
+    let adminCurrentBgm = 1;
+    const ADMIN_BGM_TRACKS = {
+      1: {
+        name: "Bài 1: Đêm Trăng Thạch Anh (Đàn Hạc 432Hz)",
+        intervalMs: 650,
+        wave: "sine",
+        noteLen: 1.8,
+        melody: [440.0, 523.25, 659.25, 587.33, 523.25, 440.0, 329.63, 392.0, 349.23, 440.0, 523.25, 659.25]
+      },
+      2: {
+        name: "Bài 2: Suối Nguồn Chữa Lành (Piano 528Hz)",
+        intervalMs: 780,
+        wave: "triangle",
+        noteLen: 2.1,
+        melody: [523.25, 440.0, 349.23, 392.0, 523.25, 587.33, 523.25, 440.0, 493.88, 392.0, 329.63, 392.0]
+      },
+      3: {
+        name: "Bài 3: Vườn Địa Đàng Huyền Bí (Music Box)",
+        intervalMs: 560,
+        wave: "sine",
+        noteLen: 1.5,
+        melody: [659.25, 783.99, 987.77, 783.99, 659.25, 493.88, 523.25, 659.25, 783.99, 659.25, 523.25, 392.0]
+      }
+    };
+
+    function playAdminBgmTrack(trackNum) {
+      if (adminBgmTimer) {
+        clearTimeout(adminBgmTimer);
+        adminBgmTimer = null;
+      }
+      adminCurrentBgm = Number(trackNum) || 0;
+      if (!adminCurrentBgm || !ADMIN_BGM_TRACKS[adminCurrentBgm]) return;
+
+      if (!adminAudioCtx) {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        adminAudioCtx = new AudioCtx();
+      }
+      if (adminAudioCtx.state === "suspended") adminAudioCtx.resume();
+
+      adminBgmStep = 0;
+      const tick = () => {
+        const cfg = ADMIN_BGM_TRACKS[adminCurrentBgm];
+        if (!cfg || !adminAudioCtx) return;
+        try {
+          const now = adminAudioCtx.currentTime;
+          const freq = cfg.melody[adminBgmStep % cfg.melody.length];
+          const osc = adminAudioCtx.createOscillator();
+          const g = adminAudioCtx.createGain();
+          osc.type = cfg.wave;
+          osc.frequency.setValueAtTime(freq, now);
+          g.gain.setValueAtTime(0.0001, now);
+          g.gain.linearRampToValueAtTime(0.06, now + 0.05);
+          g.gain.exponentialRampToValueAtTime(0.0001, now + cfg.noteLen);
+          osc.connect(g);
+          g.connect(adminAudioCtx.destination);
+          osc.start(now);
+          osc.stop(now + cfg.noteLen + 0.05);
+          adminBgmStep++;
+        } catch (_) {}
+        adminBgmTimer = setTimeout(tick, cfg.intervalMs);
+      };
+      tick();
+    }
+
+    const bgmBtns = document.querySelectorAll(".bgm-track-btn");
+    bgmBtns.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const val = Number(btn.getAttribute("data-bgm"));
+        if (val === 0) {
+          playAdminBgmTrack(0);
+          socket.emit("studio:config", { bgmEnabled: false });
+        } else {
+          playAdminBgmTrack(val);
+          socket.emit("studio:config", { bgmEnabled: true, bgmTrack: val });
+        }
+      });
+    });
+
+    function syncStudioConfigUI(cfg = {}) {
+      if (typeof cfg.voiceTTS === "boolean") {
+        document.getElementById("chkVoiceTTS").checked = cfg.voiceTTS;
+      }
+      if (typeof cfg.autoDrawQueue === "boolean") {
+        document.getElementById("chkAutoQueue").checked = cfg.autoDrawQueue;
+      }
+      if (cfg.bgMode) {
+        bgModeBtns.forEach((btn) => {
+          btn.classList.toggle("active", btn.getAttribute("data-bgmode") === cfg.bgMode);
+        });
+      }
+      const isBgmOn = cfg.bgmEnabled !== false;
+      const activeTrack = isBgmOn ? Number(cfg.bgmTrack || 1) : 0;
+      bgmBtns.forEach((btn) => {
+        btn.classList.toggle("active", Number(btn.getAttribute("data-bgm")) === activeTrack);
+      });
+      const statusEl = document.getElementById("bgmStatusText");
+      if (statusEl) {
+        statusEl.textContent = isBgmOn
+          ? `Đang phát: ${ADMIN_BGM_TRACKS[activeTrack]?.name || `Bài ${activeTrack}`}`
+          : "Đã tắt nhạc nền";
+        statusEl.style.color = isBgmOn ? "#34d399" : "#f87171";
+      }
+    }
+
+    // 3. Đổi chủ đề phiên Live
+    const topicButtons = document.querySelectorAll(".topic-btn");
+    topicButtons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const topic = btn.getAttribute("data-topic");
+        socket.emit("topic:change", { topic });
+      });
+    });
+
+    function setActiveTopicButton(topic) {
+      document.getElementById("currentTopicBadge").textContent = `Đang chọn: ${topic}`;
+      topicButtons.forEach((btn) => {
+        btn.classList.toggle("active", btn.getAttribute("data-topic") === topic);
+      });
+    }
+
+    // 4. Bảng nút bấm Test Giả Lập
+    document.getElementById("btnTestCleanse").addEventListener("click", () => {
+      socket.emit("mock:cleanse", { nickname: "Cô Phù Thủy 🔔" });
+    });
+
+    document.getElementById("btnTest1Card").addEventListener("click", () => {
+      const mock = getCustomOrRandomMock();
+      socket.emit("mock:gift", {
+        uniqueId: mock.uniqueId,
+        nickname: mock.nickname,
+        giftName: "Hoa Hồng Tinh Tú 🌹",
+        diamondCount: 5,
+        repeatCount: 1,
+        question: mock.question
+      });
+    });
+
+    document.getElementById("btnTest3Cards").addEventListener("click", () => {
+      const mock = getCustomOrRandomMock();
+      socket.emit("mock:gift", {
+        uniqueId: mock.uniqueId,
+        nickname: mock.nickname,
+        giftName: "Vương Miện Huyền Bí 👑",
+        diamondCount: 25,
+        repeatCount: 1,
+        question: mock.question
+      });
+    });
+
+    document.getElementById("btnTestAddQueue").addEventListener("click", () => {
+      const mock = getCustomOrRandomMock();
+      socket.emit("mock:chat", {
+        uniqueId: mock.uniqueId,
+        nickname: mock.nickname,
+        comment: mock.comment
+      });
+    });
+
+    const SAMPLE_COUPLES = [
+      { personA: "Minh - 15/08/2000", personB: "Lan - 01/02/2002", uniqueId: "cap_doi_2k", nickname: "Minh & Lan 💕" },
+      { personA: "Hoàng - 20/05/1998", personB: "Ly - 14/02/2001", uniqueId: "duyen_tien_dinh", nickname: "Hoàng & Ly 💖" },
+      { personA: "Tuấn - 2000", personB: "Thảo - 2000", uniqueId: "song_long_2k", nickname: "Tuấn & Thảo 💘" },
+      { personA: "Khánh - 18/06/1996", personB: "My - 24/09/2003", uniqueId: "crush_finder", nickname: "Khánh & My ✨" }
+    ];
+    let coupleIdx = 0;
+
+    document.getElementById("btnTestLoveMatch").addEventListener("click", () => {
+      const qVal = document.getElementById("mockQuestionInput").value.trim();
+      const userVal = document.getElementById("mockUserInput").value.trim().replace(/^@/, "");
+      const sampleCouple = SAMPLE_COUPLES[coupleIdx % SAMPLE_COUPLES.length];
+      coupleIdx += 1;
+
+      if (qVal) {
+        const loveComment = isLoveMatchQuery(qVal) ? qVal : `#tinhyeu ${qVal}`;
+        socket.emit("mock:chat", {
+          uniqueId: userVal || sampleCouple.uniqueId,
+          nickname: userVal || sampleCouple.nickname,
+          comment: loveComment
+        });
+      } else {
+        socket.emit("mock:chat", {
+          uniqueId: userVal || sampleCouple.uniqueId,
+          nickname: userVal || sampleCouple.nickname,
+          comment: `#tinhyeu "${sampleCouple.personA}" "${sampleCouple.personB}"`
+        });
+      }
+    });
+
+    function sendCustomComment(isMock = true) {
+      const qVal = document.getElementById("mockQuestionInput").value.trim();
+      if (!qVal) {
+        alert('Vui lòng nhập nội dung vào ô bình luận (Ví dụ: Minh - 15/08/2000 hoặc #tinhyeu "Minh - 15/08/2000" "Lan - 01/02/2002")!');
+        document.getElementById("mockQuestionInput").focus();
+        return;
+      }
+      const mock = getCustomOrRandomMock();
+      socket.emit("mock:chat", {
+        uniqueId: isMock ? mock.uniqueId : `real_${mock.uniqueId}`,
+        nickname: isMock ? mock.nickname : `${mock.nickname} 🔴`,
+        comment: mock.comment,
+        isMock
+      });
+      showPresetToast(isMock ? `🤖 Đã thêm bình luận chim mồi vào cuối hàng chờ!` : `🔴 Đã gửi bình luận Khách Thật: Ưu tiên lên đầu hàng chờ!`);
+    }
+
+    document.getElementById("btnSendCustomMock").addEventListener("click", () => sendCustomComment(true));
+    document.getElementById("btnSendCustomReal").addEventListener("click", () => sendCustomComment(false));
+    document.getElementById("mockQuestionInput").addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        sendCustomComment(false);
+      }
+    });
+
+    // Nút Test giả lập bình luận từ khách thật (ưu tiên lên đầu hàng chờ trước tất cả chim mồi)
+    document.getElementById("btnTestRealViewerComment").addEventListener("click", () => {
+      const randomItem = PRESET_COMMENTS[Math.floor(Math.random() * PRESET_COMMENTS.length)];
+      showPresetToast(`🔴 Khách Thật @${randomItem.uniqueId} vừa comment: "${randomItem.comment}" — Đã nhảy lên vị trí đầu hàng chờ!`);
+      socket.emit("mock:chat", {
+        uniqueId: `real_${randomItem.uniqueId}`,
+        nickname: `${randomItem.nickname} 🔴`,
+        comment: randomItem.comment,
+        isMock: false
+      });
+    });
+
+    // ==================== KHO 32+ BÌNH LUẬN MẪU SẴN THEO CÚ PHÁP ====================
+    const PRESET_COMMENTS = [
+      // 🌟 Bói đơn (Tên - Ngày tháng năm sinh)
+      { type: "single", uniqueId: "minh_2k", nickname: "Minh ✨", comment: "Minh - 15/08/2000" },
+      { type: "single", uniqueId: "dung_thuy2k1", nickname: "Thùy Dung 🌸", comment: "Thùy Dung - 20/11/2001 - Tình duyên sắp tới em có người mới không chị?" },
+      { type: "single", uniqueId: "lan_lan2002", nickname: "Lan Lan 💖", comment: "Lan - 2002 - Người ấy có còn tình cảm với em không ạ?" },
+      { type: "single", uniqueId: "nam_hoang98", nickname: "Hoàng Nam 🚀", comment: "Hoàng Nam - 05/02/1998 - Dự định kinh doanh sắp tới của em có thuận lợi không?" },
+      { type: "single", uniqueId: "maianh_mystic", nickname: "Mai Anh 🌙", comment: "Mai Anh - 12.09.2001 - Tài chính công việc tháng này có khởi sắc không ạ?" },
+      { type: "single", uniqueId: "havy_cute", nickname: "Hà Vy 💫", comment: "Hà Vy - 24/05/2003 - Kỳ thi tốt nghiệp và xin việc sắp tới có suôn sẻ không?" },
+      { type: "single", uniqueId: "ngoc_bao2k", nickname: "Bảo Ngọc 🔮", comment: "Bảo Ngọc - 18/09/2000 - Người cũ có chủ động quay lại tìm em không ạ?" },
+      { type: "single", uniqueId: "tuan_quoc99", nickname: "Quốc Tuấn 💼", comment: "Quốc Tuấn - 1999 - Sắp tới em có nên chuyển việc sang môi trường mới?" },
+      { type: "single", uniqueId: "ly_khanh2k4", nickname: "Khánh Ly 🌺", comment: "Khánh Ly - 28/03/2004 - Mối quan hệ hiện tại có cơ hội đi đến hôn nhân không?" },
+      { type: "single", uniqueId: "huy_duc2k", nickname: "Đức Huy 💰", comment: "Đức Huy - 2000 - Tài lộc bất ngờ có đến với em trong tuần này không?" },
+      { type: "single", uniqueId: "thao_phuong2k2", nickname: "Phương Thảo 🌟", comment: "Phương Thảo - 10/10/2002 - Vũ trụ đang muốn gửi gắm thông điệp gì đến em?" },
+      { type: "single", uniqueId: "hung_van97", nickname: "Văn Hùng 📈", comment: "Văn Hùng - 14/07/1997 - Đầu tư tài chính giai đoạn này có may mắn không ạ?" },
+      { type: "single", uniqueId: "dang_hai2k3", nickname: "Hải Đăng 💌", comment: "Hải Đăng - 03/12/2003 - Em có nên tiếp tục theo đuổi crush không ạ?" },
+      { type: "single", uniqueId: "tram_ngoc2k1", nickname: "Ngọc Trâm 🌿", comment: "Ngọc Trâm - 08/01/2001 - Sức khỏe và tinh thần tháng tới cần lưu ý gì?" },
+      { type: "single", uniqueId: "tung_thanh98", nickname: "Thanh Tùng 🎯", comment: "Thanh Tùng - 1998 - Định hướng công việc nửa cuối năm nên đi theo hướng nào?" },
+      { type: "single", uniqueId: "yennhi_2k2", nickname: "Yến Nhi 🦄", comment: "Yến Nhi - 15/06/2002" },
+      { type: "single", uniqueId: "long_thanh99", nickname: "Thành Long 💎", comment: "Thành Long - 22/08/1999 - Có tin vui về tiền bạc hay hợp đồng không chị?" },
+      { type: "single", uniqueId: "trang_thu2k4", nickname: "Thu Trang 📚", comment: "Thu Trang - 2004 - Chuyện tình cảm trong môi trường học tập có khởi sắc?" },
+      { type: "single", uniqueId: "khoa_dang2k", nickname: "Đăng Khoa ⚖️", comment: "Đăng Khoa - 11/04/2000 - Lời khuyên cho em về việc cân bằng cuộc sống và tình cảm" },
+      { type: "single", uniqueId: "my_kieu2k3", nickname: "Kiều My 🌼", comment: "Kiều My - 19/02/2003" },
+
+      // 💘 Bói ghép đôi tình yêu (#tinhyeu "Tên 1 - NS" "Tên 2 - NS")
+      { type: "love", uniqueId: "minh_lan_2k", nickname: "Minh & Lan 💕", comment: '#tinhyeu "Minh - 15/08/2000" "Lan - 01/02/2002"' },
+      { type: "love", uniqueId: "tuan_hoa_love", nickname: "Tuấn & Hoa 💖", comment: '#tinhyeu "Tuấn - 20/05/1998" "Hoa - 14/02/2001"' },
+      { type: "love", uniqueId: "hoang_mai_couple", nickname: "Hoàng & Mai 💘", comment: '#tinhyeu "Hoàng - 2000" "Mai - 2003"' },
+      { type: "love", uniqueId: "khanh_my_sweet", nickname: "Khánh & My ✨", comment: '#tinhyeu "Khánh - 18/06/1996" "My - 24/09/2003"' },
+      { type: "love", uniqueId: "duc_thao_duyen", nickname: "Đức & Thảo 🌹", comment: '#tinhyeu "Đức - 2001" "Thảo - 2002"' },
+      { type: "love", uniqueId: "nam_huong_destiny", nickname: "Nam & Hương 💍", comment: '#tinhyeu "Nam - 09/11/1999" "Hương - 22/04/2001"' },
+      { type: "love", uniqueId: "hung_trang_forever", nickname: "Hùng & Trang 💗", comment: '#tinhyeu "Hùng - 1997" "Trang - 2000"' },
+      { type: "love", uniqueId: "bao_uyen_radar", nickname: "Bảo & Uyên 💞", comment: '#tinhyeu "Bảo - 12/03/2002" "Uyên - 15/07/2004"' },
+      { type: "love", uniqueId: "quan_linh_heart", nickname: "Quân & Linh 💓", comment: '#tinhyeu "Quân - 2001" "Linh - 2003"' },
+      { type: "love", uniqueId: "viet_tram_pair", nickname: "Việt & Trâm 💐", comment: '#tinhyeu "Việt - 16/10/1998" "Trâm - 30/08/2000"' },
+      { type: "love", uniqueId: "son_nga_romance", nickname: "Sơn & Nga 🕊️", comment: '#tinhyeu "Sơn - 1999" "Nga - 2002"' },
+      { type: "love", uniqueId: "huy_ha_true_love", nickname: "Huy & Hà 💫", comment: '#tinhyeu "Huy - 07/04/2000" "Hà - 19/12/2002"' }
+    ];
+
+    let currentPresetFilter = "all";
+    let currentPresetSearch = "";
+
+    function showPresetToast(msg) {
+      const el = document.getElementById("presetToastNotice");
+      if (!el) return;
+      el.textContent = msg;
+      el.style.display = "block";
+      clearTimeout(el._timer);
+      el._timer = setTimeout(() => {
+        el.style.display = "none";
+      }, 3500);
+    }
+
+    function renderPresetCommentsList() {
+      const container = document.getElementById("presetCommentsList");
+      if (!container) return;
+
+      const q = currentPresetSearch.toLowerCase().trim();
+      const filtered = PRESET_COMMENTS.filter((item) => {
+        const matchType = currentPresetFilter === "all" || item.type === currentPresetFilter;
+        const matchSearch =
+          !q ||
+          item.comment.toLowerCase().includes(q) ||
+          item.uniqueId.toLowerCase().includes(q) ||
+          item.nickname.toLowerCase().includes(q);
+        return matchType && matchSearch;
+      });
+
+      if (!filtered.length) {
+        container.innerHTML = `
+          <div style="text-align: center; color: var(--text-sub); font-size: 13px; padding: 20px;">
+            Không tìm thấy comment nào phù hợp từ khóa "${currentPresetSearch}".
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = filtered.map((item) => {
+        const isSingle = item.type === "single";
+        const badgeHtml = isSingle
+          ? `<span class="preset-badge-single">🌟 Bói Đơn</span>`
+          : `<span class="preset-badge-love">💘 Ghép Đôi</span>`;
+
+        const safeComment = item.comment.replace(/'/g, "\\'").replace(/"/g, "&quot;");
+        const safeNick = item.nickname.replace(/'/g, "\\'").replace(/"/g, "&quot;");
+        const safeUser = item.uniqueId;
+
+        return `
+          <div class="preset-item-card">
+            <div style="flex: 1; min-width: 0;">
+              <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 3px; flex-wrap: wrap;">
+                ${badgeHtml}
+                <span style="font-size: 12px; color: var(--gold-light); font-weight: 700;">@${safeUser} (${safeNick})</span>
+              </div>
+              <div style="font-size: 13.5px; color: #f1f5f9; font-weight: 500; word-break: break-word;">
+                ${item.comment}
+              </div>
+            </div>
+            <div style="display: flex; gap: 6px; flex-shrink: 0;">
+              <button
+                class="btn-preset-send"
+                onclick="sendOnePreset('${safeUser}', '${safeNick}', '${safeComment}')"
+              >
+                🚀 Gửi ngay
+              </button>
+              <button
+                class="btn-preset-fill"
+                onclick="fillOnePreset('${safeUser}', '${safeComment}')"
+              >
+                ✍️ Điền vào ô
+              </button>
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    window.sendOnePreset = function(uniqueId, nickname, comment) {
+      socket.emit("mock:chat", {
+        uniqueId,
+        nickname,
+        comment
+      });
+      showPresetToast(`✅ Đã gửi comment từ @${uniqueId}: "${comment}"`);
+    };
+
+    window.fillOnePreset = function(uniqueId, comment) {
+      document.getElementById("mockUserInput").value = uniqueId;
+      document.getElementById("mockQuestionInput").value = comment;
+      document.getElementById("mockQuestionInput").focus();
+      showPresetToast(`✍️ Đã điền comment vào ô tùy chỉnh bên dưới!`);
+    };
+
+    // Bật/tắt kho comment
+    document.getElementById("btnTogglePresetComments").addEventListener("click", () => {
+      const panel = document.getElementById("presetCommentsPanel");
+      const arrow = document.getElementById("presetToggleArrow");
+      const isHidden = panel.style.display === "none";
+
+      if (isHidden) {
+        panel.style.display = "block";
+        arrow.textContent = "▲";
+        renderPresetCommentsList();
+      } else {
+        panel.style.display = "none";
+        arrow.textContent = "▼";
+      }
+    });
+
+    // Lọc theo tabs
+    document.querySelectorAll(".preset-filter-btn").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".preset-filter-btn").forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+        currentPresetFilter = btn.getAttribute("data-filter") || "all";
+        renderPresetCommentsList();
+      });
+    });
+
+    // Tìm kiếm
+    document.getElementById("searchPresetInput").addEventListener("input", (e) => {
+      currentPresetSearch = e.target.value;
+      renderPresetCommentsList();
+    });
+
+    // Gửi ngẫu nhiên 1 comment
+    document.getElementById("btnSendRandomPreset").addEventListener("click", () => {
+      const randomItem = PRESET_COMMENTS[Math.floor(Math.random() * PRESET_COMMENTS.length)];
+      sendOnePreset(randomItem.uniqueId, randomItem.nickname, randomItem.comment);
+    });
+
+    // Bơm nhanh 5 comment vào hàng chờ
+    document.getElementById("btnPump5Queue").addEventListener("click", () => {
+      showPresetToast("⚡ Đang bơm 5 khách comment liên tiếp vào hàng chờ...");
+      const shuffled = [...PRESET_COMMENTS].sort(() => 0.5 - Math.random()).slice(0, 5);
+
+      shuffled.forEach((item, idx) => {
+        setTimeout(() => {
+          socket.emit("mock:chat", {
+            uniqueId: item.uniqueId,
+            nickname: item.nickname,
+            comment: item.comment
+          });
+          if (idx === shuffled.length - 1) {
+            showPresetToast("🎉 Đã bơm thành công 5 comment vào hàng chờ bốc bài!");
+          }
+        }, idx * 400);
+      });
+    });
+
+    document.getElementById("btnTestVipFastPass").addEventListener("click", () => {
+      const mock = getCustomOrRandomMock("vip_king_999", "Xin trải 3 lá VIP Đặc Quyền: Tình yêu - Sự nghiệp - Lời khuyên!");
+      socket.emit("mock:vip_fastpass", {
+        uniqueId: mock.uniqueId,
+        nickname: mock.nickname,
+        giftName: "Mũ Miện Hoàng Gia 👑",
+        diamondCount: 99,
+        question: mock.question
+      });
+    });
+
+    document.getElementById("btnTestEnergyBoost").addEventListener("click", () => {
+      socket.emit("mock:energy_boost", {
+        likeCount: 500,
+        shareCount: 5,
+        nickname: "Khán Giả Phòng Live ❤️"
+      });
+    });
+
+    document.getElementById("btnTestEnergyUnlock").addEventListener("click", () => {
+      socket.emit("mock:energy_unlock", {
+        nickname: "Toàn Thể Phòng Live ☄️"
+      });
+    });
+
+    // 5. Điều khiển Hàng chờ
+    document.getElementById("btnNextQueue").addEventListener("click", () => {
+      socket.emit("queue:next", {}, (res) => {
+        if (res && !res.ok) alert(res.error);
+      });
+    });
+
+    document.getElementById("btnClearQueue").addEventListener("click", () => {
+      socket.emit("queue:clear");
+    });
+
+    function renderAdminQueue(queue = []) {
+      document.getElementById("queueCount").textContent = queue.length;
+      const listEl = document.getElementById("adminQueueList");
+
+      if (!queue.length) {
+        listEl.innerHTML = `
+          <div style="color: var(--text-sub); font-size: 14px; text-align: center; padding: 20px;">
+            Chưa có câu hỏi nào trong hàng chờ. Hãy bấm "Test Thêm câu hỏi vào hàng chờ"!
+          </div>
+        `;
+        return;
+      }
+
+      listEl.innerHTML = queue.map((item, idx) => {
+        const sourceBadge = item.isMock
+          ? `<span style="background: rgba(148, 163, 184, 0.2); color: #94a3b8; font-size: 11px; padding: 2px 7px; border-radius: 4px; border: 1px solid rgba(148,163,184,0.3);">🤖 Chim mồi</span>`
+          : `<span style="background: rgba(16, 185, 129, 0.28); color: #34d399; font-weight: 800; font-size: 11.5px; padding: 2px 8px; border-radius: 4px; border: 1.5px solid #10b981; box-shadow: 0 0 10px rgba(16,185,129,0.35);">🔴 Khách Live Thật (Ưu Tiên)</span>`;
+
+        const borderStyle = item.isVipFastPass
+          ? "border: 2px solid #fde047; box-shadow: 0 0 18px rgba(253,224,71,0.5);"
+          : (!item.isMock ? "border-left: 4.5px solid #10b981; background: rgba(16, 185, 129, 0.08);" : "");
+
+        return `
+        <div class="admin-queue-item ${item.isPriority ? "vip" : ""}" style="${borderStyle}">
+          <div>
+            <div style="font-weight: 700; color: var(--gold-light); font-size: 14px; display: flex; align-items: center; flex-wrap: wrap; gap: 6px;">
+              <span>${item.isVipFastPass ? "🚨👑 [TOP 1 VIP MẠ VÀNG]" : item.isPriority ? "👑 [VIP ƯU TIÊN]" : `#${idx + 1}`} @${item.uniqueId} ${item.seekerName ? `• 👤 <span style="color:#fff;">${item.seekerName}</span> (${item.seekerDob})` : `(${item.nickname})`}</span>
+              ${sourceBadge}
+            </div>
+            <div style="font-size: 13.5px; color: var(--text-main); margin-top: 3px;">
+              ${item.question}
+            </div>
+          </div>
+          <button
+            class="btn btn-clear-q"
+            style="padding: 6px 12px; font-size: 12px;"
+            onclick="removeQueueItem('${item.queueId}')"
+          >
+            Xóa
+          </button>
+        </div>
+      `;
+      }).join("");
+    }
+
+    window.removeQueueItem = function (queueId) {
+      socket.emit("queue:remove", { queueId });
+    };
+
+    function renderReadingPreview(reading) {
+      if (!reading || !reading.cards) return;
+      const seekerText = reading.seekerName
+        ? `${reading.seekerName}${reading.seekerDob ? ` (${reading.seekerDob})` : ""} • @${reading.user?.uniqueId || "guest"}`
+        : `@${reading.user?.uniqueId || "guest"}`;
+      document.getElementById("readingViewerName").textContent =
+        `${seekerText} (${reading.cardCount} lá)`;
+      document.getElementById("readingQuestionPreview").textContent =
+        `Câu hỏi: "${reading.question}"`;
+
+      const container = document.getElementById("readingPreviewCards");
+      const loveMatchBanner =
+        reading.spreadType === "love_match" && reading.loveMatch
+          ? `
+          <div style="background: linear-gradient(135deg, rgba(236, 72, 153, 0.32), rgba(139, 92, 246, 0.32)); border: 2px solid #f472b6; border-radius: 12px; padding: 14px; margin-bottom: 12px; box-shadow: 0 0 22px rgba(236, 72, 153, 0.35);">
+            <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap;">
+              <div style="font-weight: 800; color: #fbcfe8; font-size: 15px;">
+                💘 KẾT QUẢ GHÉP ĐÔI: <span style="color: #fff;">${reading.loveMatch.personA}</span> ❤️ <span style="color: #fff;">${reading.loveMatch.personB}</span>
+              </div>
+              <div style="background: linear-gradient(135deg, #ec4899, #db2777); color: #fff; font-weight: 900; font-size: 18px; padding: 4px 14px; border-radius: 999px; border: 1.5px solid #fde047; box-shadow: 0 0 15px rgba(253, 224, 71, 0.5);">
+                💞 ĐỘ HỢP: ${reading.loveMatch.score}%
+              </div>
+            </div>
+            <div style="color: #fde68a; font-weight: 700; font-size: 13.5px; margin-top: 6px;">
+              ✨ Cấp độ: ${reading.loveMatch.matchTier}
+            </div>
+            <div style="color: #f5f0ff; font-size: 13.5px; margin-top: 4px;">
+              🔮 Lời khuyên cặp đôi: ${reading.loveMatch.matchAdvice}
+            </div>
+          </div>
+        `
+          : "";
+
+      container.innerHTML =
+        loveMatchBanner +
+        reading.cards
+          .map((c, idx) => {
+            const aspect =
+              c.assignedAspect ||
+              (reading.cardCount === 3
+                ? ["love", "career", "advice"][idx]
+                : reading.detectedAspect || "advice");
+            const sentence1 = c.cardExplanation || c.assignedText || c[aspect] || c.advice;
+            const sentence2 = c.questionConclusion || `Chốt lại cho câu hỏi của bạn: ${c.advice}`;
+            const rwsCode =
+              c.rwsCode ||
+              (Number(c.id) <= 21
+                ? `m${String(c.id).padStart(2, "0")}`
+                : `${["w", "c", "s", "p"][Math.floor((Number(c.id) - 22) / 14)] || "m"}${String(
+                    ((Number(c.id) - 22) % 14) + 1
+                  ).padStart(2, "0")}`);
+            const cdnFallback = `https://cdn.jsdelivr.net/gh/metabismuth/tarot-json@master/cards/${rwsCode}.jpg`;
+            const imgTag = `<img src="/api/card-img/${rwsCode}" alt="${c.name}" style="width: 56px; height: 92px; object-fit: cover; border-radius: 6px; border: 1.5px solid #eab308; flex-shrink: 0; ${
+              c.isReversed ? "transform: rotate(180deg);" : ""
+            }" onerror="if(!this.dataset.cdn){this.dataset.cdn='1';this.src='${cdnFallback}';}else{this.style.display='none';}" />`;
+
+            return `
+          <div class="mini-card" style="display: flex; gap: 12px; align-items: flex-start;">
+            ${imgTag}
+            <div style="flex: 1;">
+              <h4>${c.positionLabel ? `[${c.positionLabel}] ` : ""}${c.name} ${c.isReversed ? "(Ngược)" : "(Xuôi)"}</h4>
+              <p style="margin-top: 4px;"><strong>🃏 Giải nghĩa lá bài:</strong> ${sentence1}</p>
+              <p style="color: var(--gold-light); margin-top: 6px;"><strong>🎯 Kết luận câu hỏi:</strong> ${sentence2}</p>
+            </div>
+          </div>
+        `;
+          })
+          .join("");
+    }
+
+    socket.on("state:init", (state) => {
+      if (state.studioConfig) syncStudioConfigUI(state.studioConfig);
+      if (state.topic) setActiveTopicButton(state.topic);
+      if (state.queue) renderAdminQueue(state.queue);
+      if (state.currentReading) renderReadingPreview(state.currentReading);
+      if (state.stats) {
+        document.getElementById("likeStatsBadge").textContent =
+          `Tim tích lũy: ${state.stats.totalLikes} (${state.stats.likeProgress}/${state.stats.cleanseThreshold})`;
+      }
+      if (state.tiktok?.isConnected) {
+        document.getElementById("tiktokUsernameInput").value = state.tiktok.uniqueId || "";
+        document.getElementById("connStatusText").textContent =
+          `🟢 Đang kết nối trực tiếp với TikTok Live @${state.tiktok.uniqueId}`;
+      }
+    });
+
+    socket.on("studio:config_updated", (cfg) => syncStudioConfigUI(cfg));
+    socket.on("topic:updated", ({ topic }) => setActiveTopicButton(topic));
+    socket.on("queue:updated", (queue) => renderAdminQueue(queue));
+    socket.on("tarot:draw", (reading) => renderReadingPreview(reading));
+
+    socket.on("tiktok:like", (data) => {
+      document.getElementById("likeStatsBadge").textContent =
+        `Tim tích lũy: ${data.totalLikes} (${data.likeProgress}/${data.threshold})`;
+    });
+
+    socket.on("tiktok:status", (st) => {
+      document.getElementById("connStatusText").textContent = `Trạng thái: ${st.message}`;
+    });
+
+    const liveChatFeed = document.getElementById("adminLiveChatFeed");
+    const liveChatCountBadge = document.getElementById("liveChatCountBadge");
+    let totalLiveComments = 0;
+
+    socket.on("tiktok:chat", (msg) => {
+      totalLiveComments++;
+      if (liveChatCountBadge) liveChatCountBadge.textContent = `${totalLiveComments} bình luận`;
+
+      if (totalLiveComments === 1 && liveChatFeed) {
+        liveChatFeed.innerHTML = "";
+      }
+
+      if (!liveChatFeed) return;
+
+      const row = document.createElement("div");
+      row.style.display = "flex";
+      row.style.alignItems = "flex-start";
+      row.style.gap = "8px";
+      row.style.padding = "7px 10px";
+      row.style.borderRadius = "8px";
+      row.style.fontSize = "13px";
+      row.style.background = msg.matched
+        ? (msg.type === "love_match" ? "rgba(236, 72, 153, 0.18)" : "rgba(16, 185, 129, 0.18)")
+        : "rgba(255, 255, 255, 0.04)";
+      row.style.border = msg.matched
+        ? (msg.type === "love_match" ? "1px solid rgba(236, 72, 153, 0.45)" : "1px solid rgba(16, 185, 129, 0.45)")
+        : "1px solid rgba(255, 255, 255, 0.08)";
+
+      const badgeHtml = msg.matched
+        ? (msg.type === "love_match"
+            ? `<span style="background: #ec4899; color: #fff; font-size: 10.5px; font-weight: 800; padding: 2px 7px; border-radius: 4px;">💘 GHÉP ĐÔI</span>`
+            : `<span style="background: #10b981; color: #fff; font-size: 10.5px; font-weight: 800; padding: 2px 7px; border-radius: 4px;">✅ ĐÃ VÀO HÀNG CHỜ</span>`)
+        : `<span style="background: rgba(255,255,255,0.1); color: #94a3b8; font-size: 10.5px; padding: 2px 6px; border-radius: 4px;">💬 Chat thường</span>`;
+
+      row.innerHTML = `
+        <div style="flex: 1; word-break: break-word;">
+          <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 2px;">
+            <strong style="color: ${msg.matched ? '#fde047' : '#e2e8f0'}; font-size: 13px;">@${msg.uniqueId}</strong>
+            <span style="color: var(--text-sub); font-size: 11.5px;">(${msg.nickname})</span>
+            ${badgeHtml}
+          </div>
+          <div style="color: #fff; font-size: 13.5px; line-height: 1.4;">${msg.comment}</div>
+        </div>
+      `;
+
+      liveChatFeed.prepend(row);
+      while (liveChatFeed.children.length > 50) {
+        liveChatFeed.removeChild(liveChatFeed.lastChild);
+      }
+    });
+  </script>
+</body>
+</html>
